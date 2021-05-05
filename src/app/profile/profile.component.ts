@@ -56,6 +56,10 @@ export class ProfileComponent implements OnInit {
     this.getAllPhotos();
   }
 
+  refresh(): void {
+    window.location.reload();
+  }
+
   onOpenModal(user: User, mode: string): void {
     const container = document.getElementById('main-container');
     const button = document.createElement('button');
@@ -63,7 +67,7 @@ export class ProfileComponent implements OnInit {
     button.style.display = 'none';
     button.setAttribute('data-bs-toggle', 'modal');
     if (mode === 'edit') {
-      this.editUser = this.currentUser;
+      this.editUser = this.currentUserData;
       this.nameForm = this.editUser.name;
       this.emailForm = this.editUser.email;
       this.userNameForm = this.editUser.username;
@@ -82,7 +86,7 @@ export class ProfileComponent implements OnInit {
       (response: User) => {
         console.log(response);
         this.nameForm = '';
-        this.getUsers();
+        this.reloadPage();
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -93,7 +97,7 @@ export class ProfileComponent implements OnInit {
       (response: User) => {
         console.log(response);
         this.userNameForm = '';
-        this.getUsers();
+        this.reloadPage();
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -104,7 +108,7 @@ export class ProfileComponent implements OnInit {
       (response: User) => {
         console.log(response);
         this.emailForm = '';
-        this.getUsers();
+        this.reloadPage();
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -119,32 +123,54 @@ export class ProfileComponent implements OnInit {
     //Select File
     this.selectedFile = event.target.files[0];
   }
+
+  public onDeleteImage(imageId: number) {
+    this.http.delete<void>(this.server + '/image/delete/' + imageId).subscribe(
+      (response: void) => {
+        console.log(response);
+        this.refresh();
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
+  }
+
   //Gets called when the user clicks on submit to upload the image
   onUpload() {
+    this.reloadPage();
     console.log(this.selectedFile);
     //FormData API provides methods and properties to allow us easily prepare form data to be sent with POST HTTP requests.
     const uploadImageData = new FormData();
     uploadImageData.append('imageFile', this.selectedFile, this.selectedFile.name);
 
     //Make a call to the Spring Boot Application to save the image
-    this.http.post(this.server + '/image/upload', uploadImageData, { observe: 'response' })
+    this.http.post(this.server + '/image/upload/' + this.currentUser.id, uploadImageData, { observe: 'response' })
       .subscribe((response) => {
+
         if (response.status === 200) {
           this.message = 'Image uploaded successfully';
+          
         } else {
           this.message = 'Image not uploaded successfully';
+
         }
       }
       );
+    
   }
   //Gets called when the user clicks on retieve image button to get the image from back end
   public getAllPhotos(): void {
-    this.http.get<ImageModel[]>(this.server + '/image/get/allphotos/1').subscribe(
+    this.http.get<ImageModel[]>(this.server + '/image/get/allphotos/' + this.currentUser.id).subscribe(
       (response: ImageModel[]) => {
         this.allPhotosResponse = response;
+        
         for (let i = 0; i < this.allPhotosResponse.length; i++) {
           this.base64Data = this.allPhotosResponse[i].picByte;
+          
           this.allPhotosData.push('data:image/jpeg;base64,' + this.base64Data);
+
+          this.allPhotosResponse[i].picByte = this.allPhotosData[i];
         }
       },
       (error: HttpErrorResponse) => {
