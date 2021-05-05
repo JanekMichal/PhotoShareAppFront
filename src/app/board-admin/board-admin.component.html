@@ -6,8 +6,8 @@
         <th scope="col">ID</th>
         <th scope="col">User name</th>
         <th scope="col">E-mail</th>
+        <th scope="col">Name </th>
         <th scope="col">Actions</th>
-
       </tr>
     </thead>
     <tbody *ngFor="let user of users">
@@ -15,31 +15,86 @@
         <th scope="row">{{user?.id}}</th>
         <td>{{user?.username}}</td>
         <td>{{user?.email}}</td>
+        <td>{{ user?.name }}</td>
         <td>
           <div class="btn-group" role="group">
             <i (click)="onOpenModal(user, 'edit')" type="button" class="btn btn-outline-primary">Edit</i>
-            <button (click)="onDeleteUser(user.id)" type="button" class="btn btn-outline-primary">Delete</button>
+            <button (click)="onOpenModal(user, 'delete')" type="button" class="btn btn-outline-primary">Delete</button>
           </div>
         </td>
+
       </tr>
     </tbody>
   </table>
 </div>
 
+<!-- EDIT MODAL -->
 <div class="modal fade" id="editUserModal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title" id="exampleModalLabel">Edit User</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+
+        <!-- <form #editForm="ngForm"> -->
+          <div class="mb-3">
+            <label for="nameInput" class="form-label">Name</label>
+            <input type="text" 
+            [(ngModel)]="nameForm"
+            >
+          </div>
+
+          <div class="mb-3">
+            <label for="userNameInput" class="form-label">User name</label>
+            <input type="text" 
+            [(ngModel)]="userNameForm"
+            >
+          </div>
+
+          <div class="mb-3">
+            <label for="emailInput" class="form-label">Email</label>
+            <input type="text" 
+            [(ngModel)]="emailForm"
+            >
+          </div>
+          
+          <!-- <div class="alert alert-danger" 
+          role="alert" 
+          *ngIf="editUser.name === ''">
+            Username is required!
+          </div> -->
+
+          
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button (click)="onEditUserData(editUser)" data-bs-dismiss="modal" type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        <!-- </form> -->
       </div>
     </div>
   </div>
 </div>
+
+  <!-- DELETE MODAL -->
+  <div class="modal fade" id="deleteUserModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Delete User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          Do you really want to delete user?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button (click)="onDeleteUser(deleteUser?.id)" type="button" class="btn btn-primary"
+            data-bs-dismiss="modal">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  

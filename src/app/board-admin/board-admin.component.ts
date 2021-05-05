@@ -9,9 +9,14 @@ import { UserService } from '../_services/user.service';
   styleUrls: ['./board-admin.component.css']
 })
 export class BoardAdminComponent implements OnInit {
-
   content: string;
   users: User[];
+  editUser: User;
+  deleteUser: User;
+
+  nameForm = '';
+  userNameForm = '';
+  emailForm = '';
 
   constructor(private userService: UserService) { }
 
@@ -59,16 +64,55 @@ export class BoardAdminComponent implements OnInit {
     const button = document.createElement('button');
     button.type = 'button';
     button.style.display = 'none';
-    //button.setAttribute('data-toggle', 'modal');
-    button.setAttribute('data-target', '#editUserModal');
-    // if (mode == 'edit') {
-    //   button.setAttribute('data-target', '#editUserModal');
-    // }
-    // if (mode == 'delete') {
-    //   button.setAttribute('data-target', '#deleteUserModal');
-    // }
+    button.setAttribute('data-bs-toggle', 'modal');
+    if (mode === 'edit') {
+      this.editUser = user;
+      this.nameForm = this.editUser.name;
+      this.emailForm = this.editUser.email;
+      this.userNameForm = this.editUser.username;
+      button.setAttribute('data-bs-target', '#editUserModal');
+    }
+    if (mode === 'delete') {
+      this.deleteUser = user;
+      button.setAttribute('data-bs-target', '#deleteUserModal');
+    }
     container.appendChild(button);
     button.click();
+  }
+
+  onEditUserData(user: User): void {
+    this.userService.editName(user, this.nameForm).subscribe(
+      (response: User) => {
+        console.log(response);
+        this.nameForm = '';
+        this.getUsers();
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
+
+    this.userService.editUserName(user, this.userNameForm).subscribe(
+      (response: User) => {
+        console.log(response);
+        this.userNameForm = '';
+        this.getUsers();
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
+
+    this.userService.editEmail(user, this.emailForm).subscribe(
+      (response: User) => {
+        console.log(response);
+        this.emailForm = '';
+        this.getUsers();
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
   }
 
 }
