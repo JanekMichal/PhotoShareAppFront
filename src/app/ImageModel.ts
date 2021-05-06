@@ -1,8 +1,7 @@
 export interface ImageModel {
     id: number;
     name: string;
-    picByte: any;
     type: string;
+    picByte: any;
     owner_id: number;
-
 }

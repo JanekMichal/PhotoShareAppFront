@@ -35,6 +35,7 @@ export class ProfileComponent implements OnInit {
   imageName: any;
   allPhotosResponse: ImageModel[];
   allPhotosData: any = [];
+  selectedImage: any;
 
   constructor(private token: TokenStorageService, private userService: UserService, private http: HttpClient) { }
 
@@ -86,7 +87,7 @@ export class ProfileComponent implements OnInit {
       (response: User) => {
         console.log(response);
         this.nameForm = '';
-        this.reloadPage();
+        this.refresh();
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -124,6 +125,10 @@ export class ProfileComponent implements OnInit {
     this.selectedFile = event.target.files[0];
   }
 
+  public onOpenViewPhoto(pictureId: number) {
+    this.getImage(pictureId);
+  }
+
   public onDeleteImage(imageId: number) {
     this.http.delete<void>(this.server + '/image/delete/' + imageId).subscribe(
       (response: void) => {
@@ -138,7 +143,6 @@ export class ProfileComponent implements OnInit {
 
   //Gets called when the user clicks on submit to upload the image
   onUpload() {
-    this.reloadPage();
     console.log(this.selectedFile);
     //FormData API provides methods and properties to allow us easily prepare form data to be sent with POST HTTP requests.
     const uploadImageData = new FormData();
@@ -146,31 +150,26 @@ export class ProfileComponent implements OnInit {
 
     //Make a call to the Spring Boot Application to save the image
     this.http.post(this.server + '/image/upload/' + this.currentUser.id, uploadImageData, { observe: 'response' })
-      .subscribe((response) => {
-
-        if (response.status === 200) {
-          this.message = 'Image uploaded successfully';
-          
-        } else {
-          this.message = 'Image not uploaded successfully';
-
+      .subscribe(
+        (response) => {
+          console.log(response);
+          this.refresh();
+        },
+        (error: HttpErrorResponse) => {
+          alert(error.message);
         }
-      }
       );
-    
   }
   //Gets called when the user clicks on retieve image button to get the image from back end
   public getAllPhotos(): void {
     this.http.get<ImageModel[]>(this.server + '/image/get/allphotos/' + this.currentUser.id).subscribe(
       (response: ImageModel[]) => {
         this.allPhotosResponse = response;
-        
-        for (let i = 0; i < this.allPhotosResponse.length; i++) {
-          this.base64Data = this.allPhotosResponse[i].picByte;
-          
-          this.allPhotosData.push('data:image/jpeg;base64,' + this.base64Data);
 
-          this.allPhotosResponse[i].picByte = this.allPhotosData[i];
+        for (let i = 0; i < this.allPhotosResponse.length; i++) {
+          //this.base64Data = this.allPhotosResponse[i].picByte;
+         // this.allPhotosData.push('data:image/jpeg;base64,' + this.base64Data);
+          this.allPhotosResponse[i].picByte = 'data:image/jpeg;base64,' + this.allPhotosResponse[i].picByte;
         }
       },
       (error: HttpErrorResponse) => {
@@ -179,14 +178,15 @@ export class ProfileComponent implements OnInit {
     );
   }
 
-  getImage() {
+  public getImage(imageId: number) {
     //Make a call to Sprinf Boot to get the Image Bytes.
-    this.http.get('http://localhost:8080/image/get/' + this.imageName)
+    this.http.get('http://localhost:8080/image/get/' + imageId)
       .subscribe(
         res => {
           this.retrieveResonse = res;
           this.base64Data = this.retrieveResonse.picByte;
           this.retrievedImage = 'data:image/jpeg;base64,' + this.base64Data;
+          this.selectedImage = this.retrievedImage;
         }
       );
   }
