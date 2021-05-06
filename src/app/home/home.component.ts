@@ -10,18 +10,10 @@ import { UserService } from '../_services/user.service';
 export class HomeComponent implements OnInit {
 
   content: string;
-  // myimage: string = "../../../assets";
-  constructor(private userService: UserService) { }
+
+  constructor() { }
 
   ngOnInit(): void {
-  //   this.userService.getPublicContent().subscribe(
-  //     data => {
-  //       this.content = data;
-  //     },
-  //     err => {
-  //       this.content = JSON.parse(err.error).message;
-  //     }
-  //   );
-  }
 
+  }
 }

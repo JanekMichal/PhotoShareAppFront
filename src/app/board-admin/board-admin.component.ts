@@ -47,18 +47,6 @@ export class BoardAdminComponent implements OnInit {
     );
   }
 
-  onUpdateUser(user: User): void {
-    this.userService.updateUser(user).subscribe(
-      (response: User) => {
-        console.log(response);
-        this.getUsers();
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.message);
-      }
-    );
-  }
-
   onOpenModal(user: User, mode: string): void {
     const container = document.getElementById('main-container');
     const button = document.createElement('button');

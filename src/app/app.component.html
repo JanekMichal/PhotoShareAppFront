@@ -26,10 +26,10 @@
         </li>
       </ul>
 
-      <form class="d-flex" *ngIf="isLoggedIn">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
+      <div class="d-flex" >
+        <input [(ngModel)]="searchName" *ngIf="isLoggedIn" class="form-control me-2" type="text" placeholder="Search" >
+        <button (click)="onSearchUser()"  routerLink="search" class="btn btn-outline-success" type="submit" *ngIf="isLoggedIn">Search</button>
+      </div>
 
       <ul class="navbar-nav ml-auto" *ngIf="isLoggedIn">
         <li class="nav-item">

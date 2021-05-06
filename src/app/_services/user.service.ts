@@ -31,20 +31,18 @@ export class UserService {
     return this.http.get<User[]>(API_URL + 'admin');
   }
 
-  //zmienić na getId() (może??)
   getCurrentUser(): Observable<User> {
     this.currentUser = this.token.getUser();
     this.currentUserId = this.currentUser.id;
     return this.http.get<User>(API_URL + 'profile/' + this.currentUserId);
   }
 
-  deleteUser(userId: number): Observable<void> {
-    return this.http.delete<void>(API_URL + 'admin/delete/id/' + userId);
+  searchForUser(name: String): Observable<User[]> {
+    return this.http.get<User[]>(API_URL + "search/" + name);
   }
 
-  //nie wiem czy ma sens 
-  updateUser(user: User): Observable<User> {
-    return this.http.put<User>(API_URL + 'profile/edit-name', user);
+  deleteUser(userId: number): Observable<void> {
+    return this.http.delete<void>(API_URL + 'admin/delete/id/' + userId);
   }
 
   editName(user: User, editUserNameStr: String): Observable<User> {
