@@ -20,7 +20,6 @@ export class SearchComponent implements OnInit {
     if (this.searchName != "") {
       this.onSearchForUser();
     }
-    
   }
 
   onSearchForUser() {
@@ -33,4 +32,9 @@ export class SearchComponent implements OnInit {
       }
     );
   }
+
+  onViewUserProfile(id: number) {
+    this.data.setSearchedUserId(id);
+  }
+  
 }
