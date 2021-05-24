@@ -37,6 +37,10 @@ export class UserService {
     return this.http.get<User>(API_URL + 'profile/' + this.currentUserId);
   }
 
+  getUser(userId: number): Observable<User> {
+    return this.http.get<User>(API_URL + 'profile/' + userId);
+  }
+
   searchForUser(name: String): Observable<User[]> {
     return this.http.get<User[]>(API_URL + "search/" + name);
   }

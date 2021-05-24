@@ -34,13 +34,25 @@ export class ViewProfileComponent implements OnInit {
   allPhotosResponse: ImageModel[];
   allPhotosData: any = [];
   selectedImage: any;
-
+  searchedUserData: User;
   searchedUserId: number;
   constructor(private userService: UserService, private http: HttpClient, private data: DataService) {}
 
   ngOnInit(): void {
     this.data.searchedUserId.subscribe(message => this.searchedUserId = message);
+    this.getUserData();
     this.getAllPhotos();
+  }
+
+  public getUserData(): void {
+    this.userService.getUser(this.searchedUserId).subscribe(
+      (response: User) => {
+        this.searchedUserData = response;
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
   }
 
   public onOpenViewPhoto(pictureId: number) {
@@ -53,9 +65,9 @@ export class ViewProfileComponent implements OnInit {
         this.allPhotosResponse = response;
 
         for (let i = 0; i < this.allPhotosResponse.length; i++) {
-          //this.base64Data = this.allPhotosResponse[i].picByte;
-         // this.allPhotosData.push('data:image/jpeg;base64,' + this.base64Data);
+          console.log(this.allPhotosResponse[i].picByte)
           this.allPhotosResponse[i].picByte = 'data:image/jpeg;base64,' + this.allPhotosResponse[i].picByte;
+          console.log(this.allPhotosResponse[i].picByte)
         }
       },
       (error: HttpErrorResponse) => {

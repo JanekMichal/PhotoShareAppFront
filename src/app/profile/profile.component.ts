@@ -1,6 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
 import { ImageModel } from '../ImageModel';
 import { User } from '../user';
 import { TokenStorageService } from '../_services/token-storage.service';
@@ -165,7 +164,6 @@ export class ProfileComponent implements OnInit {
     this.http.get<ImageModel[]>(this.server + '/image/get/allphotos/' + this.currentUser.id).subscribe(
       (response: ImageModel[]) => {
         this.allPhotosResponse = response;
-
         for (let i = 0; i < this.allPhotosResponse.length; i++) {
           //this.base64Data = this.allPhotosResponse[i].picByte;
          // this.allPhotosData.push('data:image/jpeg;base64,' + this.base64Data);

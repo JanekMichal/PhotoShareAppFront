@@ -1,3 +1,16 @@
+
+<div class="container " id="main-container">
+  <header class="jumbotron">
+    <h3>
+      <strong>{{ searchedUserData?.username }}</strong> Profile
+    </h3>
+  </header>
+  <p>
+    <strong>Name:</strong>
+    {{ searchedUserData?.name }}
+  </p>
+
+
 <div class="album py-5 bg-light">
     <div class="container">
 
@@ -19,6 +32,21 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Image Modal -->
+  <div class="modal fade" id="imageModal">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+  
+        <div class="modal-body">
+          <img [src]="selectedImage" class="img-fluid">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
