@@ -9,8 +9,11 @@
     <strong>Name:</strong>
     {{ searchedUserData?.name }}
   </p>
+  <!-- <p>{{ currentUserId }}</p> -->
+  
 
-
+  <button type="button" class="btn btn-outline-primary" (click)="onFollow()" *ngIf="isCurrentUserFollowingSearchedUser">UnFollow</button>
+  <button type="button" class="btn btn-outline-primary" (click)="onFollow()" *ngIf="!isCurrentUserFollowingSearchedUser">Follow</button>
 <div class="album py-5 bg-light">
     <div class="container">
 

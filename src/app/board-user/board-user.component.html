@@ -1,5 +1,38 @@
-<div class="container">
-  <header class="jumbotron">
-    <p>{{ content }}</p>
-  </header>
+<div class="album py-5 bg-light">
+  <div class="container" style="max-width: 800px;">
+    
+    <div *ngFor="let picture of allPhotosResponse">
+      <div class="card mb-3">
+        <img [src]="picture.picByte" class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">{{ picture.name}}</h5>
+          <p class="card-text">Tutaj w przyszłości będzie jakiś opis.</p>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- <div class="row row-cols-1 ">
+      <div *ngFor="let picture of allPhotosResponse">
+        <div class="col">
+          <div class="card shadow-sm">
+            <img [src]="picture.picByte" class="img-fluid">
+
+            <div class="card-body">
+              <p class="card-text">Tutaj może będzie jakiś opis.</p>
+
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <button (click)="onOpenViewPhoto(picture.id)" type="button" class="btn btn-sm btn-outline-secondary"
+                    data-bs-toggle="modal" data-bs-target="#imageModal">View</button>
+                  <button (click)="onDeleteImage(picture.id)" type="button"
+                    class="btn btn-sm btn-outline-secondary">Delete</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+  </div>
 </div>

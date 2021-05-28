@@ -1,9 +1,5 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { User } from './user';
+import { Component, OnInit } from '@angular/core';
 import { TokenStorageService } from './_services/token-storage.service';
-import { UserService } from './_services/user.service';
-import { Input } from '@angular/core'
 import { DataService } from './_services/data.service';
 @Component({
   selector: 'app-root',
@@ -18,6 +14,7 @@ export class AppComponent implements OnInit {
   username: string;
   name: string;
   email: string;
+  id: number;
 
   searchName: string;
 
@@ -32,10 +29,10 @@ export class AppComponent implements OnInit {
       const user = this.tokenStorageService.getUser();
       this.roles = user.roles;
       this.email = user.email;
-
+      this.id = user.id;
       this.showAdminBoard = this.roles.includes('ROLE_ADMIN');
       this.showModeratorBoard = this.roles.includes('ROLE_MODERATOR');
-      
+
       this.name = user.name;
       this.username = user.username;
     }
@@ -49,6 +46,4 @@ export class AppComponent implements OnInit {
   public onSearchUser() {
     this.data.changeMessage(this.searchName);
   }
-
-
 }

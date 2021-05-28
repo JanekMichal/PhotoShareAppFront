@@ -1,8 +1,12 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { AppComponent } from '../app.component';
 import { ImageModel } from '../ImageModel';
 import { User } from '../user';
 import { DataService } from '../_services/data.service';
+import { FollowService } from '../_services/follow.service';
+import { TokenStorageService } from '../_services/token-storage.service';
 import { UserService } from '../_services/user.service';
 
 @Component({
@@ -36,11 +40,19 @@ export class ViewProfileComponent implements OnInit {
   selectedImage: any;
   searchedUserData: User;
   searchedUserId: number;
-  constructor(private userService: UserService, private http: HttpClient, private data: DataService) {}
+
+
+  constructor(private token: TokenStorageService,
+    private userService: UserService,
+    private http: HttpClient,
+    private data: DataService,
+    private followService: FollowService) { }
 
   ngOnInit(): void {
+    this.currentUserId = this.token.getUser().id;
     this.data.searchedUserId.subscribe(message => this.searchedUserId = message);
     this.getUserData();
+    this.isFollowing();
     this.getAllPhotos();
   }
 
@@ -55,6 +67,34 @@ export class ViewProfileComponent implements OnInit {
     );
   }
 
+  isCurrentUserFollowingSearchedUser: Boolean;
+
+  isFollowing(): void {
+    this.followService.ifFollowing(this.currentUserId, this.searchedUserId).subscribe(
+      (response: Boolean) => {
+        if(response === true) { 
+          this.isCurrentUserFollowingSearchedUser = true;
+        } else {
+          this.isCurrentUserFollowingSearchedUser = false;
+        }
+      }
+    )
+  }
+
+  public onFollow(): void {
+    if(this.isCurrentUserFollowingSearchedUser) {
+      this.isCurrentUserFollowingSearchedUser = false;
+      this.followService.unfollow(this.currentUserId, this.searchedUserId).subscribe();
+    } else {
+      this.isCurrentUserFollowingSearchedUser = true;
+      this.followService.follow(this.currentUserId, this.searchedUserId).subscribe();
+    }
+  }
+
+
+
+
+  //-------------------------------- IMAGES -------------------------------
   public onOpenViewPhoto(pictureId: number) {
     this.getImage(pictureId);
   }
@@ -65,9 +105,9 @@ export class ViewProfileComponent implements OnInit {
         this.allPhotosResponse = response;
 
         for (let i = 0; i < this.allPhotosResponse.length; i++) {
-          console.log(this.allPhotosResponse[i].picByte)
+
           this.allPhotosResponse[i].picByte = 'data:image/jpeg;base64,' + this.allPhotosResponse[i].picByte;
-          console.log(this.allPhotosResponse[i].picByte)
+
         }
       },
       (error: HttpErrorResponse) => {

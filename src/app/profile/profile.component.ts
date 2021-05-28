@@ -4,7 +4,7 @@ import { ImageModel } from '../ImageModel';
 import { User } from '../user';
 import { TokenStorageService } from '../_services/token-storage.service';
 import { UserService } from '../_services/user.service';
-
+import { FollowService } from '../_services/follow.service';
 
 @Component({
   selector: 'app-profile',
@@ -13,7 +13,8 @@ import { UserService } from '../_services/user.service';
 })
 export class ProfileComponent implements OnInit {
   [x: string]: any;
-
+  private server = 'http://localhost:8080';
+  //-------------- User --------------
   currentUser: any;
   currentUserData: User;
   currentUserId: number;
@@ -24,8 +25,11 @@ export class ProfileComponent implements OnInit {
   userNameForm = '';
   emailForm = '';
 
-  private server = 'http://localhost:8080';
+  //-------------- FOLLOW --------------
 
+  followingCount: number;
+
+  //-------------- IMAGES --------------
   selectedFile: File;
   retrievedImage: any;
   base64Data: any;
@@ -36,7 +40,12 @@ export class ProfileComponent implements OnInit {
   allPhotosData: any = [];
   selectedImage: any;
 
-  constructor(private token: TokenStorageService, private userService: UserService, private http: HttpClient) { }
+
+
+  constructor(private token: TokenStorageService,
+    private userService: UserService,
+    private http: HttpClient,
+    private followService: FollowService) { }
 
   public getCurrentUserF(): void {
     this.userService.getCurrentUser().subscribe(
@@ -54,11 +63,13 @@ export class ProfileComponent implements OnInit {
     this.currentUserId = this.currentUser.id;
     this.getCurrentUserF();
     this.getAllPhotos();
+    this.getFollowingCount();
   }
 
   refresh(): void {
     window.location.reload();
   }
+  //  --------------------------------------- USER DATA -----------------------------------------------
 
   onOpenModal(user: User, mode: string): void {
     const container = document.getElementById('main-container');
@@ -117,6 +128,22 @@ export class ProfileComponent implements OnInit {
   }
 
 
+  //  --------------------------------------- FOLLOWERS -----------------------------------------------
+
+  
+
+  public getFollowingCount(): void {
+    this.followService.getFollowingCount(this.currentUser.id).subscribe(
+      (response: number) => {
+        this.followingCount = response;
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
+  }
+
+
   //  --------------------------------------- PHOTOS -----------------------------------------------
 
   public onFileChanged(event) {
@@ -142,7 +169,6 @@ export class ProfileComponent implements OnInit {
 
   //Gets called when the user clicks on submit to upload the image
   onUpload() {
-    console.log(this.selectedFile);
     //FormData API provides methods and properties to allow us easily prepare form data to be sent with POST HTTP requests.
     const uploadImageData = new FormData();
     uploadImageData.append('imageFile', this.selectedFile, this.selectedFile.name);
@@ -166,7 +192,7 @@ export class ProfileComponent implements OnInit {
         this.allPhotosResponse = response;
         for (let i = 0; i < this.allPhotosResponse.length; i++) {
           //this.base64Data = this.allPhotosResponse[i].picByte;
-         // this.allPhotosData.push('data:image/jpeg;base64,' + this.base64Data);
+          // this.allPhotosData.push('data:image/jpeg;base64,' + this.base64Data);
           this.allPhotosResponse[i].picByte = 'data:image/jpeg;base64,' + this.allPhotosResponse[i].picByte;
         }
       },
@@ -175,6 +201,7 @@ export class ProfileComponent implements OnInit {
       }
     );
   }
+  
 
   public getImage(imageId: number) {
     //Make a call to Sprinf Boot to get the Image Bytes.
