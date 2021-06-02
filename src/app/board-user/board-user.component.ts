@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ImageModel } from '../ImageModel';
 import { TokenStorageService } from '../_services/token-storage.service';
 import { UserService } from '../_services/user.service';
-import { PhotoService } from '../_services/photo.service';
+import { ImageService } from '../_services/image.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { User } from '../user';
 
@@ -41,7 +41,7 @@ export class BoardUserComponent implements OnInit {
               this.allPhotosResponse[i].name = response.username;
             }
           );
-
+          console.log(this.allPhotosResponse[i].description);
         }
       },
       (error: HttpErrorResponse) => {

@@ -54,6 +54,11 @@ export class ViewProfileComponent implements OnInit {
     this.getUserData();
     this.isFollowing();
     this.getAllPhotos();
+    this.getFollowers();
+    this.getFollowing();
+    this.getFollowersCount();
+    this.getFollowingCount();
+    
   }
 
   public getUserData(): void {
@@ -67,6 +72,35 @@ export class ViewProfileComponent implements OnInit {
     );
   }
 
+//  --------------------------------------- FOLLOWERS -----------------------------------------------
+
+followersList: User[];
+followingList: User[];
+
+public getFollowers(): void {
+  this.followService.getFollowers(this.searchedUserId).subscribe(
+    (response: User[]) => {
+      this.followersList = response;
+      console.log(this.followersList);
+    },
+    (error: HttpErrorResponse) => {
+      alert(error.message);
+    }
+  );
+}
+
+
+public getFollowing(): void {
+  this.followService.getFollowing(this.searchedUserId).subscribe(
+    (response: User[]) => {
+      this.followingList = response;
+      console.log(this.followingList);
+    },
+    (error: HttpErrorResponse) => {
+      alert(error.message);
+    }
+  );
+}
   isCurrentUserFollowingSearchedUser: Boolean;
 
   isFollowing(): void {
@@ -91,7 +125,27 @@ export class ViewProfileComponent implements OnInit {
     }
   }
 
+  public getFollowingCount(): void {
+    this.followService.getFollowingCount(this.searchedUserId).subscribe(
+      (response: number) => {
+        this.followingCount = response;
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
+  }
 
+  public getFollowersCount(): void {
+    this.followService.getFollowersCount(this.searchedUserId).subscribe(
+      (response: number) => {
+        this.followersCount = response;
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
+  }
 
 
   //-------------------------------- IMAGES -------------------------------

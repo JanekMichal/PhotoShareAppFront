@@ -13,7 +13,7 @@ const httpOptions = {
 @Injectable({
   providedIn: 'root'
 })
-export class PhotoService {
+export class ImageService {
 
   allPhotosResponse: ImageModel[];
 
@@ -22,4 +22,13 @@ export class PhotoService {
   public getFeedPhotos(userId: number): Observable<ImageModel[]> {
     return this.http.get<ImageModel[]>(API_URL + "get_feed_photos" + userId);
   }
+  //to drugie description nie jest potrzebne...
+  public changeDescription(imageId: number, description: String): Observable<ImageModel> {
+    console.log(imageId, description)
+    return this.http.patch<ImageModel>("http://localhost:8080/image/change_description/" + imageId, description);
+  }
+
+  // editEmail(user: User, editEmailStr: String): Observable<User> {
+  //   return this.http.patch<User>(API_URL + 'profile/' + user.id + "/email/" + editEmailStr, user)
+  // }
 }

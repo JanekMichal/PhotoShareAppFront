@@ -5,6 +5,7 @@ import { User } from '../user';
 import { TokenStorageService } from '../_services/token-storage.service';
 import { UserService } from '../_services/user.service';
 import { FollowService } from '../_services/follow.service';
+import { ImageService } from '../_services/image.service';
 
 @Component({
   selector: 'app-profile',
@@ -28,8 +29,12 @@ export class ProfileComponent implements OnInit {
   //-------------- FOLLOW --------------
 
   followingCount: number;
+  followersCount: number;
+
 
   //-------------- IMAGES --------------
+
+  descriptionFormTextArea = '';
   selectedFile: File;
   retrievedImage: any;
   base64Data: any;
@@ -45,7 +50,9 @@ export class ProfileComponent implements OnInit {
   constructor(private token: TokenStorageService,
     private userService: UserService,
     private http: HttpClient,
-    private followService: FollowService) { }
+    private followService: FollowService,
+    private imageService: ImageService
+    ) { }
 
   public getCurrentUserF(): void {
     this.userService.getCurrentUser().subscribe(
@@ -64,6 +71,9 @@ export class ProfileComponent implements OnInit {
     this.getCurrentUserF();
     this.getAllPhotos();
     this.getFollowingCount();
+    this.getFollowersCount();
+    this.getFollowers();
+    this.getFollowing();
   }
 
   refresh(): void {
@@ -95,7 +105,6 @@ export class ProfileComponent implements OnInit {
   onEditUserData(user: User): void {
     this.userService.editName(user, this.nameForm).subscribe(
       (response: User) => {
-        console.log(response);
         this.nameForm = '';
         this.refresh();
       },
@@ -106,7 +115,6 @@ export class ProfileComponent implements OnInit {
 
     this.userService.editUserName(user, this.userNameForm).subscribe(
       (response: User) => {
-        console.log(response);
         this.userNameForm = '';
         this.reloadPage();
       },
@@ -117,7 +125,6 @@ export class ProfileComponent implements OnInit {
 
     this.userService.editEmail(user, this.emailForm).subscribe(
       (response: User) => {
-        console.log(response);
         this.emailForm = '';
         this.reloadPage();
       },
@@ -130,7 +137,41 @@ export class ProfileComponent implements OnInit {
 
   //  --------------------------------------- FOLLOWERS -----------------------------------------------
 
-  
+
+
+  followersList: User[];
+  followingList: User[];
+
+  public getFollowers(): void {
+    this.followService.getFollowers(this.currentUserId).subscribe(
+      (response: User[]) => {
+        this.followersList = response;
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
+  }
+
+  public getFollowing(): void {
+    this.followService.getFollowing(this.currentUserId).subscribe(
+      (response: User[]) => {
+        this.followingList = response; 
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
+  }
+
+  public onUnfollow(removedUserId: number): void {
+    this.followService.unfollow(this.currentUserId, removedUserId).subscribe();
+    this.getFollowing();
+  }
+
+  public onRemove(removedUserId: number): void {
+    this.followService.unfollow(removedUserId, this.currentUserId).subscribe();
+  }
 
   public getFollowingCount(): void {
     this.followService.getFollowingCount(this.currentUser.id).subscribe(
@@ -143,8 +184,31 @@ export class ProfileComponent implements OnInit {
     );
   }
 
+  public getFollowersCount(): void {
+    this.followService.getFollowersCount(this.currentUser.id).subscribe(
+      (response: number) => {
+        this.followersCount = response;
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
+  }
 
   //  --------------------------------------- PHOTOS -----------------------------------------------
+
+  public onChangeDescription() {
+    console.log(this.currentImageId, this.descriptionFormTextArea);
+    this.imageService.changeDescription(this.currentImageId, this.descriptionFormTextArea).subscribe();
+    this.refresh();
+  }
+
+  currentImageId: number;
+  onOpenDescriptionModal(description: string, imageId: number): void {
+    this.currentImageId = imageId;
+    this.descriptionFormTextArea = description;
+    
+  }
 
   public onFileChanged(event) {
     //Select File
@@ -191,9 +255,8 @@ export class ProfileComponent implements OnInit {
       (response: ImageModel[]) => {
         this.allPhotosResponse = response;
         for (let i = 0; i < this.allPhotosResponse.length; i++) {
-          //this.base64Data = this.allPhotosResponse[i].picByte;
-          // this.allPhotosData.push('data:image/jpeg;base64,' + this.base64Data);
           this.allPhotosResponse[i].picByte = 'data:image/jpeg;base64,' + this.allPhotosResponse[i].picByte;
+
         }
       },
       (error: HttpErrorResponse) => {
@@ -201,7 +264,7 @@ export class ProfileComponent implements OnInit {
       }
     );
   }
-  
+
 
   public getImage(imageId: number) {
     //Make a call to Sprinf Boot to get the Image Bytes.

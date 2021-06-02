@@ -4,4 +4,5 @@ export interface ImageModel {
     type: string;
     ownerId: number;
     picByte: any;
+    description: string;
 }

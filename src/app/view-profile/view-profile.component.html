@@ -1,20 +1,43 @@
-
 <div class="container " id="main-container">
-  <header class="jumbotron">
-    <h3>
-      <strong>{{ searchedUserData?.username }}</strong> Profile
-    </h3>
-  </header>
-  <p>
-    <strong>Name:</strong>
-    {{ searchedUserData?.name }}
-  </p>
-  <!-- <p>{{ currentUserId }}</p> -->
-  
+  <div class="row align-items-center">
+    <div class="col">
+      <header class="jumbotron">
+        <h3>
+          <strong>{{ searchedUserData?.username }}</strong> Profile
+        </h3>
+      </header>
+      <p>
+        <strong>Name:</strong>
+        {{ searchedUserData?.name }}
+      </p>
+      <button type="button" class="btn btn-outline-primary" (click)="onFollow()"
+        *ngIf="isCurrentUserFollowingSearchedUser">Unfollow</button>
+      <button type="button" class="btn btn-outline-primary" (click)="onFollow()"
+        *ngIf="!isCurrentUserFollowingSearchedUser">Follow</button>
+    </div>
 
-  <button type="button" class="btn btn-outline-primary" (click)="onFollow()" *ngIf="isCurrentUserFollowingSearchedUser">UnFollow</button>
-  <button type="button" class="btn btn-outline-primary" (click)="onFollow()" *ngIf="!isCurrentUserFollowingSearchedUser">Follow</button>
-<div class="album py-5 bg-light">
+    <div class="col">
+      <h4>
+        <strong>Followers: </strong>
+        {{ followersCount }}
+      </h4>
+      <i type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#followersModal">Show
+        followers</i>
+    </div>
+
+    <div class="col">
+      <h4>
+        <strong>Following: </strong>
+        {{ followingCount }}
+      </h4>
+      <i type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#followingModal">Show
+        following</i>
+    </div>
+  </div>
+
+
+
+  <div class="album py-5 bg-light">
     <div class="container">
 
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
@@ -24,7 +47,7 @@
               <img [src]="picture.picByte" class="img-fluid">
 
               <div class="card-body">
-                <p class="card-text">Tutaj może będzie jakiś opis.</p>
+                <p class="card-text">{{ picture.description }}</p>
 
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="btn-group">
@@ -40,16 +63,81 @@
     </div>
   </div>
 
-<!-- Image Modal -->
+  <!-- Image Modal -->
   <div class="modal fade" id="imageModal">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
-  
+
         <div class="modal-body">
           <img [src]="selectedImage" class="img-fluid">
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOLLOWERS MODAL -->
+  <div class="modal fade" id="followersModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Followers</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+
+          <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">User name</th>
+                <th scope="col">Name </th>
+                
+              </tr>
+            </thead>
+            <tbody *ngFor="let follower of followersList">
+              <tr>
+                <td>{{ follower?.username }}</td>
+                <td>{{ follower?.name }}</td>
+                
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOLLOWING MODAL -->
+  <div class="modal fade" id="followingModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Following</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+
+          <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">User name</th>
+                <th scope="col">Name </th>
+               
+              </tr>
+            </thead>
+            <tbody *ngFor="let following of followingList">
+              <tr>
+                <td>{{ following?.username }}</td>
+                <td>{{ following?.name }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

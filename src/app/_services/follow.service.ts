@@ -20,8 +20,16 @@ export class FollowService {
     return this.http.get<User[]>(API_URL + 'get_followers/' + followerId);
   }
 
+  getFollowing(followerId: number): Observable<User[]> {
+    return this.http.get<User[]>(API_URL + 'get_followed/' + followerId);
+  }
+
   getFollowingCount(followerId: number): Observable<number> {
     return this.http.get<number>(API_URL + 'get_following_count/' + followerId);
+  }
+
+  getFollowersCount(followerId: number): Observable<number> {
+    return this.http.get<number>(API_URL + 'get_followers_count/' + followerId);
   }
 
   follow(followerId: number, followedId: number): Observable<any> {

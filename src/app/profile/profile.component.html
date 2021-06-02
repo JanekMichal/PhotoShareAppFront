@@ -1,27 +1,45 @@
 <div class="container " *ngIf="currentUser; else loggedOut" id="main-container">
-  <header class="jumbotron">
-    <h3>
-      <strong>{{ currentUser?.username }}</strong> Profile
-    </h3>
-  </header>
-  <p>
-    <strong>Email:</strong>
-    {{ currentUser?.email }}
-  </p>
-  <p>
-    <strong>Name:</strong>
-    {{ currentUserData?.name }}
-  </p>
-
-  <p>
-    <strong>Name:</strong>
-    {{ followingCount }}
-  </p>
+  <div class="row align-items-center">
+    <div class="col">
 
 
-  <!-- z Modalami -->
-  <i (click)="onOpenModal(user, 'edit')" type="button" class="btn btn-outline-primary">Edit profile</i><br>
-  <br>
+      <header class="jumbotron">
+        <h3>
+          <strong>{{ currentUser?.username }}</strong> Profile
+        </h3>
+      </header>
+      <p>
+        <strong>Email:</strong>
+        {{ currentUser?.email }}
+      </p>
+      <p>
+        <strong>Name:</strong>
+        {{ currentUserData?.name }}
+      </p>
+
+      <i (click)="onOpenModal(user, 'edit')" type="button" class="btn btn-outline-primary">Edit profile</i><br>
+      <br>
+    </div>
+    <div class="col">
+      <h4>
+        <strong>Followers: </strong>
+        {{ followersCount }}
+      </h4>
+
+      <i type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#followersModal">Show
+        followers</i><br>
+      <br>
+    </div>
+    <div class="col">
+      <h4>
+        <strong>Following: </strong>
+        {{ followingCount }}
+      </h4>
+      <i type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#followingModal">Show
+        following</i><br>
+      <br>
+    </div>
+  </div>
   <!-- <strong>Roles:</strong>
   <ul>
     <li *ngFor="let role of currentUser.roles">
@@ -48,22 +66,81 @@
       <div *ngIf=message>{{message}}</div>
     </div>
   </div>
-  <!-- <div class="container row">
-    <div class="col-md-6">
-      <input type="text" class="form-control" id="name" placeholder="image name" [(ngModel)]="imageName" name="name" />
-    </div>
-    <div class="col-md-6">
-      <input type="button" (click)="getImage()" value="Get Image">
-    </div>
-  </div> -->
-  <!-- <div class="container row">
-    <div class="col-md-12">
-      <div *ngIf=retrievedImage>
-        <img [src]="retrievedImage" class="img-fluid">
+
+  <!-- FOLLOWERS MODAL -->
+  <div class="modal fade" id="followersModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Followers</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+
+          <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">User name</th>
+                <th scope="col">Name </th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody *ngFor="let follower of followersList">
+              <tr>
+                <td>{{ follower?.username }}</td>
+                <td>{{ follower?.name }}</td>
+                <td class="text-center">
+                  <button (click)="onRemove(follower.id)" type="button" class="btn btn-outline-danger">Remove</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-  </div> -->
+  </div>
 
+  <!-- FOLLOWING MODAL -->
+  <div class="modal fade" id="followingModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Following</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+
+          <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">User name</th>
+                <th scope="col">Name </th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody *ngFor="let following of followingList">
+              <tr>
+                <td>{{ following?.username }}</td>
+                <td>{{ following?.name }}</td>
+                <td class="text-center">
+                  <button (click)="onUnfollow(following.id)" type="button"
+                    class="btn btn-outline-primary">Unfollow</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- All photos -->
   <div class="album py-5 bg-light">
     <div class="container">
 
@@ -71,17 +148,19 @@
         <div *ngFor="let picture of allPhotosResponse">
           <div class="col">
             <div class="card shadow-sm">
-              <img [src]="picture.picByte" class="img-fluid">
+              <img [src]="picture.picByte" class="img-fluid" >
 
               <div class="card-body">
-                <p class="card-text">Tutaj może będzie jakiś opis.</p>
-
+                <p class="card-text">{{ picture.description }}</p>
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="btn-group">
                     <button (click)="onOpenViewPhoto(picture.id)" type="button" class="btn btn-sm btn-outline-secondary"
                       data-bs-toggle="modal" data-bs-target="#imageModal">View</button>
                     <button (click)="onDeleteImage(picture.id)" type="button"
                       class="btn btn-sm btn-outline-secondary">Delete</button>
+                    <button (click)="onOpenDescriptionModal(picture.description, picture.id)" type="button"
+                      class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal"
+                      data-bs-target="#descriptionModal">Description</button>
                   </div>
                 </div>
               </div>
@@ -93,6 +172,31 @@
   </div>
 </div>
 
+
+<!-- Description Modal -->
+<div class="modal fade" id="descriptionModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Description</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+
+
+
+      <div class="modal-body">
+        <div class="mb-3">
+          <textarea class="form-control" id="description-text" [(ngModel)]="descriptionFormTextArea"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Dismiss</button>
+        <button (click)="onChangeDescription()"  type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Image Modal -->
 <div class="modal fade" id="imageModal">
@@ -119,7 +223,6 @@
       </div>
       <div class="modal-body">
 
-        <!-- <form #editForm="ngForm"> -->
         <div class="mb-3">
           <label for="nameInput" class="form-label">Name</label>
           <input type="text" [(ngModel)]="nameForm">
@@ -147,7 +250,6 @@
           <button (click)="onEditUserData(editUser)" data-bs-dismiss="modal" type="button" class="btn btn-primary">Save
             changes</button>
         </div>
-        <!-- </form> -->
       </div>
     </div>
   </div>
