@@ -25,7 +25,13 @@
 
       </tr>
     </tbody>
+
   </table>
+  <div style="justify-content: center; display: flex;">
+    <button (click)="getUsersPage()" style="justify-content: center;" type="button" class="btn btn-outline-primary">GET
+      MORE</button>
+  </div>
+
 </div>
 
 <!-- EDIT MODAL -->
@@ -39,62 +45,55 @@
       <div class="modal-body">
 
         <!-- <form #editForm="ngForm"> -->
-          <div class="mb-3">
-            <label for="nameInput" class="form-label">Name</label>
-            <input type="text" 
-            [(ngModel)]="nameForm"
-            >
-          </div>
+        <div class="mb-3">
+          <label for="nameInput" class="form-label">Name</label>
+          <input type="text" [(ngModel)]="nameForm">
+        </div>
 
-          <div class="mb-3">
-            <label for="userNameInput" class="form-label">User name</label>
-            <input type="text" 
-            [(ngModel)]="userNameForm"
-            >
-          </div>
+        <div class="mb-3">
+          <label for="userNameInput" class="form-label">User name</label>
+          <input type="text" [(ngModel)]="userNameForm">
+        </div>
 
-          <div class="mb-3">
-            <label for="emailInput" class="form-label">Email</label>
-            <input type="text" 
-            [(ngModel)]="emailForm"
-            >
-          </div>
-          
-          <!-- <div class="alert alert-danger" 
+        <div class="mb-3">
+          <label for="emailInput" class="form-label">Email</label>
+          <input type="text" [(ngModel)]="emailForm">
+        </div>
+
+        <!-- <div class="alert alert-danger" 
           role="alert" 
           *ngIf="editUser.name === ''">
             Username is required!
           </div> -->
 
-          
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button (click)="onEditUserData(editUser)" data-bs-dismiss="modal" type="button" class="btn btn-primary">Save changes</button>
-          </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button (click)="onEditUserData(editUser)" data-bs-dismiss="modal" type="button" class="btn btn-primary">Save
+            changes</button>
+        </div>
         <!-- </form> -->
       </div>
     </div>
   </div>
 </div>
 
-  <!-- DELETE MODAL -->
-  <div class="modal fade" id="deleteUserModal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Delete User</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          Do you really want to delete user?
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button (click)="onDeleteUser(deleteUser?.id)" type="button" class="btn btn-primary"
-            data-bs-dismiss="modal">Delete</button>
-        </div>
+<!-- DELETE MODAL -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete User</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        Do you really want to delete user?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button (click)="onDeleteUser(deleteUser?.id)" type="button" class="btn btn-primary"
+          data-bs-dismiss="modal">Delete</button>
       </div>
     </div>
   </div>
-
-  
+</div>

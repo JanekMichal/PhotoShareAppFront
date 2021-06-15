@@ -18,6 +18,8 @@ export class BoardAdminComponent implements OnInit {
   userNameForm = '';
   emailForm = '';
 
+  pageNumber: number = 0;
+
   constructor(private userService: UserService) { }
 
   public getUsers(): void {
@@ -31,8 +33,54 @@ export class BoardAdminComponent implements OnInit {
     );
   }
 
+  public getUsersPage(): void {
+    
+    this.userService.getUsersPage(this.pageNumber).subscribe(
+      (response: User[]) => {
+        if(this.pageNumber == 0) { 
+          this.users = response;
+        } else {
+          this.users = this.users.concat(response);
+        }
+        this.pageNumber++;
+        // for (let i = 0; i < response.length; i++) {
+        //   this.users[i] = response[i];
+        //   console.log(response[i])
+        // }
+         
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
+  }
+
+  public getUsersPage2(): void {
+    this.userService.getUsersPage(1).subscribe(
+      (response: User[]) => {
+        if(this.pageNumber == 0) {
+          this.pageNumber++;
+          this.users = response;
+        } else {
+          this.users = this.users.concat(response);
+        }
+        // for (let i = 0; i < response.length; i++) {
+        //   this.users[i] = response[i];
+        //   console.log(response[i])
+        // }
+         
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
+  }
+
   ngOnInit(): void {
-    this.getUsers();
+    //this.getUsers();
+
+    this.getUsersPage();
+    
   }
 
   public onDeleteUser(userId: number): void {

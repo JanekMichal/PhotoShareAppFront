@@ -31,6 +31,10 @@ export class UserService {
     return this.http.get<User[]>(API_URL + 'admin');
   }
 
+  getUsersPage(pageNumber: number): Observable<User[]> {
+    return this.http.get<User[]>(API_URL + 'page_users/' + pageNumber);
+  }
+
   getCurrentUser(): Observable<User> {
     this.currentUser = this.token.getUser();
     this.currentUserId = this.currentUser.id;
