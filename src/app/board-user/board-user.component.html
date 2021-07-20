@@ -1,14 +1,18 @@
 <div class="album py-5 bg-light">
   <div class="container" style="max-width: 800px;">
-    
+
     <div *ngFor="let picture of allPhotosResponse">
       <div class="card mb-3">
+        <div class="card-body">
+          
+          <h5 (click)="onViewUserProfile(picture?.ownerId)" class="card-title" routerLink="view-profile">{{ picture.name}}</h5>
+        </div>
         <img [src]="picture.picByte" class="card-img-top">
         <div class="card-body">
-          <h5 class="card-title">{{ picture.name}}</h5>
           <p class="card-text">{{ picture.description }} </p>
         </div>
       </div>
+      <br>
     </div>
   </div>
 </div>

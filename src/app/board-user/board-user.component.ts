@@ -5,6 +5,7 @@ import { UserService } from '../_services/user.service';
 import { ImageService } from '../_services/image.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { User } from '../user';
+import { DataService } from '../_services/data.service';
 
 const API_URL = 'http://localhost:8080/image/';
 
@@ -22,7 +23,8 @@ export class BoardUserComponent implements OnInit {
 
   constructor(private userService: UserService,
     private token: TokenStorageService,
-    private http: HttpClient) { }
+    private http: HttpClient,
+     private data: DataService) { }
 
   ngOnInit(): void {
     this.currentUser = this.token.getUser();
@@ -48,5 +50,9 @@ export class BoardUserComponent implements OnInit {
         alert(error.message);
       }
     );
+  }
+
+  onViewUserProfile(id: number) {
+    this.data.setSearchedUserId(id);
   }
 }

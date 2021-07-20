@@ -147,10 +147,13 @@
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
         <div *ngFor="let picture of allPhotosResponse">
           <div class="col">
-            <div class="card shadow-sm">
-              <img [src]="picture.picByte" class="img-fluid" >
-
-              <div class="card-body">
+            <div class="card shadow-sm ">
+              <div class="img-hover-zoom">
+                <a (click)="onOpenViewPhoto(picture.id)">
+                  <img  [src]="picture.picByte" class="img-fluid" >
+                </a>
+              </div>
+              <div class="card-body" (click)="onOpenViewPhoto(picture.id)">
                 <p class="card-text">{{ picture.description }}</p>
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="btn-group">
@@ -192,7 +195,8 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Dismiss</button>
-        <button (click)="onChangeDescription()"  type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Confirm</button>
+        <button (click)="onChangeDescription()" type="button" class="btn btn-outline-success"
+          data-bs-dismiss="modal">Confirm</button>
       </div>
     </div>
   </div>

@@ -21,6 +21,7 @@ const routes: Routes = [
   { path: 'admin', component: BoardAdminComponent },
   { path: 'search', component: SearchComponent },
   { path: 'search/view-profile', component: ViewProfileComponent },
+  { path: 'user/view-profile', component: ViewProfileComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 
