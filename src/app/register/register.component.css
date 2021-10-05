@@ -30,3 +30,7 @@ label {
   -webkit-border-radius: 50%;
   border-radius: 50%;
 }
+
+h6 {
+  margin-top: 1rem;
+}
