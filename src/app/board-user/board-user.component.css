@@ -1,5 +1,17 @@
-#commentDescription, #commentUserName{ display:inline;}
+#commentDescription, #commentUserName {
+    display: inline;
+}
 
 #commentInputBar {
     margin-top: 10px;
+}
+
+#deleteCommentIcon {
+    position: absolute;
+    right: 10px;
+    top: 0px;
+}
+
+.commentBody {
+    position: relative;
 }

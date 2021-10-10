@@ -39,7 +39,17 @@ export class BoardUserComponent implements OnInit {
   }
 
   public addComment(userId: number, photoId: number, description: String): void {
-    this.imageService.addComment(userId, photoId, description).subscribe();
+    this.imageService.addComment(userId, photoId, description).subscribe(
+      () => this.getComments(photoId)
+      
+    );
+    this.description = ' ';
+  }
+
+  public deleteComment(commentId: number, photoId: number) {
+    this.imageService.deleteComment(commentId).subscribe(
+      () => this.getComments(photoId)
+    );
   }
 
   public getComments(photoId: number): void {
@@ -47,12 +57,11 @@ export class BoardUserComponent implements OnInit {
       (response: CommentModel[]) => {
         this.comments = response;
         for (let i = 0; i < this.comments.length; i++) {
-          this.userService.getUser(this.comments[i].createdBy).subscribe(
+          this.userService.getUser(this.comments[i].ownerId).subscribe(
             (response: User) => {
               this.comments[i].authorName = response.username;
             }
           );
-          //console.log(this.allPhotosResponse[i].description);
         }
       },
       (error: HttpErrorResponse) => {

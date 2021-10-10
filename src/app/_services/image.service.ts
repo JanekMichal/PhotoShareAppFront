@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ImageModel } from '../ImageModel';
 import { CommentModel } from '../CommentModel';
-const API_URL = 'http://localhost:8080/api/';
+const API_URL = 'http://localhost:8080/image/';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -25,6 +25,10 @@ export class ImageService {
 
   public addComment(userId: number, photoId: number, description: String): Observable<any> {
     return this.http.post<String>("http://localhost:8080/image/add_comment/" + photoId + "/" + userId, description);
+  }
+
+  public deleteComment(commentId: number): Observable<any> {
+    return this.http.delete<any>(API_URL + "delete_comment/" + commentId);
   }
 
   public getComments(photoId: number): Observable<CommentModel[]> {
