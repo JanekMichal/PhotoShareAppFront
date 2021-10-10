@@ -19,14 +19,15 @@
 
           <div *ngFor="let comment of comments">
             <div *ngIf="picture?.id == comment?.photoId">
-              <p> {{ comment.description }} </p>
-
-
+              <h5 id="commentUserName">{{ comment.authorName }}:</h5>
+              <p id="commentDescription"> {{ comment.description }} </p>
             </div>
-            
+
           </div>
-          <div class="input-group mb-3">
-            <button (click)="addComment(currentUserId, picture.id, description)" class="btn btn-outline-secondary" type="button" id="button-addComment">Add
+          <div class="input-group mb-3" id="commentInputBar">
+
+            <button (click)="addComment(currentUserId, picture.id, description)" class="btn btn-outline-secondary"
+              type="button" id="button-addComment">Add
               Comment!</button>
             <input [(ngModel)]="description" type="text" class="form-control" placeholder="">
           </div>

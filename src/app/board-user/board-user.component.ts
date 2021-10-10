@@ -46,6 +46,14 @@ export class BoardUserComponent implements OnInit {
     this.imageService.getComments(photoId).subscribe(
       (response: CommentModel[]) => {
         this.comments = response;
+        for (let i = 0; i < this.comments.length; i++) {
+          this.userService.getUser(this.comments[i].createdBy).subscribe(
+            (response: User) => {
+              this.comments[i].authorName = response.username;
+            }
+          );
+          //console.log(this.allPhotosResponse[i].description);
+        }
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
