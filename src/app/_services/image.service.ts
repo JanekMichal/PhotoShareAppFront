@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ImageModel } from '../ImageModel';
-
+import { CommentModel } from '../CommentModel';
 const API_URL = 'http://localhost:8080/api/';
 
 const httpOptions = {
@@ -20,7 +20,15 @@ export class ImageService {
   constructor(private http: HttpClient) { }
 
   public getFeedPhotos(userId: number): Observable<ImageModel[]> {
-    return this.http.get<ImageModel[]>(API_URL + "get_feed_photos" + userId);
+    return this.http.get<ImageModel[]>("http://localhost:8080/image/get_feed_photos/" + userId);
+  }
+
+  public addComment(userId: number, photoId: number, description: String): Observable<any> {
+    return this.http.post<String>("http://localhost:8080/image/add_comment/" + photoId + "/" + userId, description);
+  }
+
+  public getComments(photoId: number): Observable<CommentModel[]> {
+    return this.http.get<CommentModel[]>("http://localhost:8080/image/get_comments/" + photoId);
   }
   //to drugie description nie jest potrzebne...
   public changeDescription(imageId: number, description: String): Observable<ImageModel> {

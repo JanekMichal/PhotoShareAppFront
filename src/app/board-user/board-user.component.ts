@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ImageModel } from '../ImageModel';
 import { TokenStorageService } from '../_services/token-storage.service';
 import { UserService } from '../_services/user.service';
-import { ImageService } from '../_services/image.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { User } from '../user';
 import { DataService } from '../_services/data.service';
+import { CommentModel } from '../CommentModel';
+import { ImageService } from '../_services/image.service';
 
 const API_URL = 'http://localhost:8080/image/';
 
@@ -20,16 +21,37 @@ export class BoardUserComponent implements OnInit {
   allPhotosResponse: ImageModel[];
   currentUser: any;
   currentUserId: number;
+  comments: CommentModel[];
+  comment: CommentModel;
+  areCommentsCollapsed: boolean = true;
+  description: String;
 
   constructor(private userService: UserService,
     private token: TokenStorageService,
     private http: HttpClient,
-     private data: DataService) { }
+    private data: DataService,
+    private imageService: ImageService) { }
 
   ngOnInit(): void {
     this.currentUser = this.token.getUser();
     this.currentUserId = this.currentUser.id;
     this.getFeedPhotos();
+  }
+
+  public addComment(userId: number, photoId: number, description: String): void {
+    this.imageService.addComment(userId, photoId, description).subscribe();
+  }
+
+  public getComments(photoId: number): void {
+    this.imageService.getComments(photoId).subscribe(
+      (response: CommentModel[]) => {
+        this.comments = response;
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
+    this.areCommentsCollapsed = false;
   }
 
   public getFeedPhotos(): void {
@@ -43,7 +65,7 @@ export class BoardUserComponent implements OnInit {
               this.allPhotosResponse[i].name = response.username;
             }
           );
-          console.log(this.allPhotosResponse[i].description);
+          //console.log(this.allPhotosResponse[i].description);
         }
       },
       (error: HttpErrorResponse) => {
