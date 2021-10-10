@@ -31,6 +31,10 @@ export class ImageService {
     return this.http.delete<any>(API_URL + "delete_comment/" + commentId);
   }
 
+  public getCommentsCount(imageId: number): Observable<number> {
+    return this.http.get<number>(API_URL + "comments_count/" + imageId);
+  }
+
   public getComments(photoId: number): Observable<CommentModel[]> {
     return this.http.get<CommentModel[]>("http://localhost:8080/image/get_comments/" + photoId);
   }
@@ -39,6 +43,8 @@ export class ImageService {
     console.log(imageId, description)
     return this.http.patch<ImageModel>("http://localhost:8080/image/change_description/" + imageId, description);
   }
+
+  
 
   // editEmail(user: User, editEmailStr: String): Observable<User> {
   //   return this.http.patch<User>(API_URL + 'profile/' + user.id + "/email/" + editEmailStr, user)

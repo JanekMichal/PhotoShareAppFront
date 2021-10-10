@@ -25,6 +25,7 @@ export class BoardUserComponent implements OnInit {
   comment: CommentModel;
   areCommentsCollapsed: boolean = true;
   description: String;
+  commentsCount: number;
 
   constructor(private userService: UserService,
     private token: TokenStorageService,
@@ -38,10 +39,15 @@ export class BoardUserComponent implements OnInit {
     this.getFeedPhotos();
   }
 
+  public getCommentsCount(photoId: number):void {
+    this.imageService.getCommentsCount(photoId).subscribe(
+      () => this.commentsCount
+    );
+  }
+
   public addComment(userId: number, photoId: number, description: String): void {
     this.imageService.addComment(userId, photoId, description).subscribe(
-      () => this.getComments(photoId)
-      
+      (response: number) => this.commentsCount = response
     );
     this.description = ' ';
   }
@@ -80,6 +86,11 @@ export class BoardUserComponent implements OnInit {
           this.userService.getUser(this.allPhotosResponse[i].ownerId).subscribe(
             (response: User) => {
               this.allPhotosResponse[i].name = response.username;
+            }
+          );
+          this.imageService.getCommentsCount(this.allPhotosResponse[i].id).subscribe(
+            (response: number) => {
+              this.allPhotosResponse[i].commentsCount = response;
             }
           );
           //console.log(this.allPhotosResponse[i].description);

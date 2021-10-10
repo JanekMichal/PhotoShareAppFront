@@ -5,4 +5,5 @@ export interface ImageModel {
     ownerId: number;
     picByte: any;
     description: string;
+    commentsCount: number;
 }
