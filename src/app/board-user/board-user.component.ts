@@ -47,9 +47,14 @@ export class BoardUserComponent implements OnInit {
 
   public addComment(userId: number, photoId: number, description: String): void {
     this.imageService.addComment(userId, photoId, description).subscribe(
-      (response: number) => this.commentsCount = response
+      (response: number) => {
+        this.commentsCount = response;
+        this.getComments(photoId);
+       
+      } 
     );
     this.description = ' ';
+    
   }
 
   public deleteComment(commentId: number, photoId: number) {
@@ -66,6 +71,11 @@ export class BoardUserComponent implements OnInit {
           this.userService.getUser(this.comments[i].ownerId).subscribe(
             (response: User) => {
               this.comments[i].authorName = response.username;
+              this.imageService.getCommentsCount(this.allPhotosResponse[i].id).subscribe(
+                (response: number) => {
+                  this.allPhotosResponse[i].commentsCount = response;
+                }
+              );
             }
           );
         }
