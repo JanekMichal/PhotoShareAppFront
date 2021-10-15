@@ -64,5 +64,4 @@ export class UserService {
   editEmail(user: User, editEmailStr: String): Observable<User> {
     return this.http.patch<User>(API_URL + 'profile/' + user.id + "/email/" + editEmailStr, user)
   }
-  
 }

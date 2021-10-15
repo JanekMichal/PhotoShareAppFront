@@ -7,6 +7,7 @@ import { User } from '../user';
 import { DataService } from '../_services/data.service';
 import { CommentModel } from '../CommentModel';
 import { ImageService } from '../_services/image.service';
+import { Observable } from 'rxjs';
 
 const API_URL = 'http://localhost:8080/image/';
 
@@ -21,11 +22,17 @@ export class BoardUserComponent implements OnInit {
   allPhotosResponse: ImageModel[];
   currentUser: any;
   currentUserId: number;
+  description: String;
+
+  areCommentsCollapsed: boolean = true;
   comments: CommentModel[];
   comment: CommentModel;
-  areCommentsCollapsed: boolean = true;
-  description: String;
   commentsCount: number;
+  commentsPageNumber: number = 0;
+  //commentsPageSize: number = 5;
+  photoWithLoadedCommentsId: number;
+  areThereMoreComments: boolean = true;
+  commentsLoadedCount: number = 0;
 
   constructor(private userService: UserService,
     private token: TokenStorageService,
@@ -39,10 +46,14 @@ export class BoardUserComponent implements OnInit {
     this.getFeedPhotos();
   }
 
-  public getCommentsCount(photoId: number):void {
+  public getCommentsCount(photoId: number): number {
     this.imageService.getCommentsCount(photoId).subscribe(
-      () => this.commentsCount
+      (response: number) => {
+        this.commentsCount = response
+        console.log("Response: " + this.commentsCount)
+      }
     );
+    return this.commentsCount;
   }
 
   public addComment(userId: number, photoId: number, description: String): void {
@@ -50,16 +61,66 @@ export class BoardUserComponent implements OnInit {
       (response: number) => {
         this.commentsCount = response;
         this.getComments(photoId);
-       
-      } 
+      }
     );
     this.description = ' ';
-    
+
   }
 
   public deleteComment(commentId: number, photoId: number) {
     this.imageService.deleteComment(commentId).subscribe(
       () => this.getComments(photoId)
+    );
+  }
+
+  public commentsButtonClick(photoId: number) {
+    if (this.areCommentsCollapsed == true) {
+      this.areCommentsCollapsed = false;
+      this.areThereMoreComments = true;
+      this.getCommentsPaged(photoId)
+    } else {
+      this.areThereMoreComments = false
+      this.areCommentsCollapsed = true;
+    }
+  }
+
+  public getCommentsPaged(photoId: number): void {
+    if (this.photoWithLoadedCommentsId != photoId) {
+      this.commentsPageNumber = 0;
+    }
+    this.imageService.getCommentsPaged(photoId, this.commentsPageNumber).subscribe(
+      (response: CommentModel[]) => {
+        if (this.photoWithLoadedCommentsId != photoId) {
+          this.photoWithLoadedCommentsId = photoId;
+          this.comments = response;
+          this.commentsLoadedCount = response.length
+        } else {
+          this.comments = this.comments.concat(response);
+          this.commentsLoadedCount = this.commentsLoadedCount + response.length
+        }
+
+        for (let i = 0; i < this.comments.length; i++) {
+          this.userService.getUser(this.comments[i].ownerId).subscribe(
+            (response: User) => {
+              this.comments[i].authorName = response.username
+            }
+          );
+        }
+        this.imageService.getCommentsCount(photoId).subscribe(
+          (response: number) => {
+            this.commentsCount = response
+            if (this.commentsLoadedCount == this.commentsCount) {
+              this.areThereMoreComments = false
+            } else {
+              this.areThereMoreComments = true
+            }
+          }
+        )
+        this.commentsPageNumber++
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
     );
   }
 
@@ -84,7 +145,7 @@ export class BoardUserComponent implements OnInit {
         alert(error.message);
       }
     );
-    this.areCommentsCollapsed = false;
+    //this.areCommentsCollapsed = false;
   }
 
   public getFeedPhotos(): void {

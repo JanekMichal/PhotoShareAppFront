@@ -22,6 +22,10 @@ export class BoardAdminComponent implements OnInit {
 
   constructor(private userService: UserService) { }
 
+  ngOnInit(): void {
+    this.getUsersPage();
+  }
+
   public getUsers(): void {
     this.userService.getUsers().subscribe(
       (response: User[]) => {
@@ -34,7 +38,6 @@ export class BoardAdminComponent implements OnInit {
   }
 
   public getUsersPage(): void {
-    
     this.userService.getUsersPage(this.pageNumber).subscribe(
       (response: User[]) => {
         if(this.pageNumber == 0) { 
@@ -76,12 +79,7 @@ export class BoardAdminComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {
-    //this.getUsers();
 
-    this.getUsersPage();
-    
-  }
 
   public onDeleteUser(userId: number): void {
     this.userService.deleteUser(userId).subscribe(

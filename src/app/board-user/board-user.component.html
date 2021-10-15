@@ -12,20 +12,27 @@
         <div class="card-body">
           <p class="card-text">{{ picture.description }} </p>
           <button class="btn"><i class="bi bi-heart"></i> </button>
-          <button class="btn" (click)="getComments(picture?.id)"><i class="bi bi-chat"></i> </button> {{ picture.commentsCount}}
+          <button class="btn" (click)="commentsButtonClick(picture?.id)"><i class="bi bi-chat"></i> </button> {{
+          picture.commentsCount}}
           <button class="btn"><i class="bi bi-share"></i> </button>
 
 
 
           <div *ngFor="let comment of comments">
-            <div *ngIf="picture?.id == comment?.photoId" class="commentBody">
-              <h5 id="commentUserName" (click)="onViewUserProfile(comment.ownerId)" routerLink="view-profile">{{ comment.authorName }}:</h5>
+            <div *ngIf="picture?.id == comment?.photoId && areCommentsCollapsed == false" class="commentBody">
+              <h5 id="commentUserName" (click)="onViewUserProfile(comment.ownerId)" routerLink="view-profile">{{
+                comment.authorName }}:</h5>
               <p id="commentDescription"> {{ comment.description }} </p>
-              
-              <button *ngIf="currentUserId == comment.ownerId" class="btn" (click)="deleteComment(comment.id, picture.id)"  ><i class="bi bi-x-lg" id="deleteCommentIcon"></i> </button>
+
+              <button *ngIf="currentUserId == comment.ownerId" class="btn"
+                (click)="deleteComment(comment.id, picture.id)"><i class="bi bi-x-lg" id="deleteCommentIcon"></i>
+              </button>
             </div>
 
           </div>
+          <button *ngIf="photoWithLoadedCommentsId == picture.id && areThereMoreComments == true"  (click)="getCommentsPaged(picture?.id)" style="justify-content: center;" type="button"
+            class="btn btn-outline-primary">Load more comments
+          </button>
           <div class="input-group mb-3" id="commentInputBar">
 
             <button (click)="addComment(currentUserId, picture.id, description)" class="btn btn-outline-secondary"
