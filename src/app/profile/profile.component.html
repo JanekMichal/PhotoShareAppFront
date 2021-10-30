@@ -2,20 +2,24 @@
   <div class="row align-items-center">
     <div class="col">
 
-
+      
       <header class="jumbotron">
         <h3>
           <strong>{{ currentUser?.username }}</strong> Profile
         </h3>
       </header>
-      <p>
+      <img [src]="profilePhoto.picByte" class="rounded-circle">
+      <br>
+      <!-- <p>
         <strong>Email:</strong>
         {{ currentUser?.email }}
       </p>
       <p>
         <strong>Name:</strong>
         {{ currentUserData?.name }}
-      </p>
+      </p> -->
+
+      <!-- <i  routerLink="profile-editor" type="button" class="btn btn-outline-primary">Edit profile</i><br> -->
 
       <i (click)="onOpenModal(user, 'edit')" type="button" class="btn btn-outline-primary">Edit profile</i><br>
       <br>
@@ -57,7 +61,7 @@
       <input class="form-control" type="file" (change)="onFileChanged($event)">
     </div>
     <div class="col-auto">
-      <input class="btn btn-outline-primary " type="button" (click)="onUpload()" value="Upload">
+      <input class="btn btn-outline-primary" type="button" (click)="onUpload()" value="Upload">
     </div>
   </div>
 
@@ -140,24 +144,24 @@
 
 
 
-  <!-- All photos -->
+  <!-- All images -->
   <div class="album py-5 bg-light">
     <div class="container">
 
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-        <div *ngFor="let picture of allPhotosResponse">
+        <div *ngFor="let picture of allImagesResponse">
           <div class="col">
             <div class="card shadow-sm ">
               <div class="img-hover-zoom">
-                <a (click)="onOpenViewPhoto(picture.id)">
-                  <img  [src]="picture.picByte" class="img-fluid" >
+                <a (click)="onOpenViewImage(picture.id)">
+                  <img [src]="picture.picByte" class="img-fluid">
                 </a>
               </div>
-              <div class="card-body" (click)="onOpenViewPhoto(picture.id)">
+              <div class="card-body" (click)="onOpenViewImage(picture.id)">
                 <p class="card-text">{{ picture.description }}</p>
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="btn-group">
-                    <button (click)="onOpenViewPhoto(picture.id)" type="button" class="btn btn-sm btn-outline-secondary"
+                    <button (click)="onOpenViewImage(picture.id)" type="button" class="btn btn-sm btn-outline-secondary"
                       data-bs-toggle="modal" data-bs-target="#imageModal">View</button>
                     <button (click)="onDeleteImage(picture.id)" type="button"
                       class="btn btn-sm btn-outline-secondary">Delete</button>

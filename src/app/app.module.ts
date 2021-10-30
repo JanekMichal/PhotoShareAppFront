@@ -1,10 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
@@ -17,6 +16,11 @@ import { BoardUserComponent } from './board-user/board-user.component';
 import { authInterceptorProviders } from './_helpers/auth.interceptor';
 import { SearchComponent } from './search/search.component';
 import { ViewProfileComponent } from './view-profile/view-profile.component';
+import { ProfileEditorComponent } from './profile-editor/profile-editor.component';
+import { ProfilePhotoUploaderComponent } from './profile-photo-uploader/profile-photo-uploader.component';
+
+import { ImageCropperModule } from 'ngx-image-cropper';
+
 
 @NgModule({
   declarations: [
@@ -29,13 +33,18 @@ import { ViewProfileComponent } from './view-profile/view-profile.component';
     BoardModeratorComponent,
     BoardUserComponent,
     SearchComponent,
-    ViewProfileComponent
+    ViewProfileComponent,
+    ProfileEditorComponent,
+    ProfilePhotoUploaderComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ImageCropperModule
   ],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent]

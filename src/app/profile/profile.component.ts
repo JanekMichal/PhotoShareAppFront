@@ -14,7 +14,6 @@ import { ImageService } from '../_services/image.service';
 })
 export class ProfileComponent implements OnInit {
   [x: string]: any;
-  private server = 'http://localhost:8080';
   //-------------- User --------------
   currentUser: any;
   currentUserData: User;
@@ -41,8 +40,9 @@ export class ProfileComponent implements OnInit {
   retrieveResonse: any;
   message: string;
   imageName: any;
-  allPhotosResponse: ImageModel[];
-  allPhotosData: any = [];
+  allImagesResponse: ImageModel[];
+  allImagesData: any = [];
+  profilePhoto: ImageModel;
   selectedImage: any;
 
 
@@ -52,7 +52,7 @@ export class ProfileComponent implements OnInit {
     private http: HttpClient,
     private followService: FollowService,
     private imageService: ImageService
-    ) { }
+  ) { }
 
   public getCurrentUserF(): void {
     this.userService.getCurrentUser().subscribe(
@@ -69,7 +69,8 @@ export class ProfileComponent implements OnInit {
     this.currentUser = this.token.getUser();
     this.currentUserId = this.currentUser.id;
     this.getCurrentUserF();
-    this.getAllPhotos();
+    this.getAllImages();
+    this.getProfileImage();
     this.getFollowingCount();
     this.getFollowersCount();
     this.getFollowers();
@@ -137,8 +138,6 @@ export class ProfileComponent implements OnInit {
 
   //  --------------------------------------- FOLLOWERS -----------------------------------------------
 
-
-
   followersList: User[];
   followingList: User[];
 
@@ -156,7 +155,7 @@ export class ProfileComponent implements OnInit {
   public getFollowing(): void {
     this.followService.getFollowing(this.currentUserId).subscribe(
       (response: User[]) => {
-        this.followingList = response; 
+        this.followingList = response;
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -195,7 +194,7 @@ export class ProfileComponent implements OnInit {
     );
   }
 
-  //  --------------------------------------- PHOTOS -----------------------------------------------
+  //  --------------------------------------- IMAGES -----------------------------------------------
 
   public onChangeDescription() {
     console.log(this.currentImageId, this.descriptionFormTextArea);
@@ -207,7 +206,7 @@ export class ProfileComponent implements OnInit {
   onOpenDescriptionModal(description: string, imageId: number): void {
     this.currentImageId = imageId;
     this.descriptionFormTextArea = description;
-    
+
   }
 
   public onFileChanged(event) {
@@ -215,12 +214,12 @@ export class ProfileComponent implements OnInit {
     this.selectedFile = event.target.files[0];
   }
 
-  public onOpenViewPhoto(pictureId: number) {
+  public onOpenViewImage(pictureId: number) {
     this.getImage(pictureId);
   }
 
   public onDeleteImage(imageId: number) {
-    this.http.delete<void>(this.server + '/image/delete/' + imageId).subscribe(
+    this.imageService.deleteImage(imageId).subscribe(
       (response: void) => {
         console.log(response);
         this.refresh();
@@ -231,38 +230,48 @@ export class ProfileComponent implements OnInit {
     );
   }
 
-  //Gets called when the user clicks on submit to upload the image
+
   onUpload() {
-    //FormData API provides methods and properties to allow us easily prepare form data to be sent with POST HTTP requests.
     const uploadImageData = new FormData();
     uploadImageData.append('imageFile', this.selectedFile, this.selectedFile.name);
-
-    //Make a call to the Spring Boot Application to save the image
-    this.http.post(this.server + '/image/upload/' + this.currentUser.id, uploadImageData, { observe: 'response' })
-      .subscribe(
-        (response) => {
-          console.log(response);
-          this.refresh();
-        },
-        (error: HttpErrorResponse) => {
-          alert(error.message);
-        }
-      );
+   
+    this.imageService.uploadImage(this.currentUser.id, uploadImageData).subscribe(
+      (response) => {
+        console.log(response);
+        this.refresh();
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
   }
-  //Gets called when the user clicks on retieve image button to get the image from back end
-  public getAllPhotos(): void {
-    this.http.get<ImageModel[]>(this.server + '/image/get/allphotos/' + this.currentUser.id).subscribe(
-      (response: ImageModel[]) => {
-        this.allPhotosResponse = response;
-        for (let i = 0; i < this.allPhotosResponse.length; i++) {
-          this.allPhotosResponse[i].picByte = 'data:image/jpeg;base64,' + this.allPhotosResponse[i].picByte;
 
+  public getAllImages(): void {
+    this.imageService.getAllImages(this.currentUser.id).subscribe(
+      (response: ImageModel[]) => {
+        this.allImagesResponse = response;
+        for (let i = 0; i < this.allImagesResponse.length; i++) {
+          this.allImagesResponse[i].picByte = 'data:image/jpeg;base64,' + this.allImagesResponse[i].picByte;
         }
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
       }
     );
+  }
+
+  public getProfileImage() {
+    console.log(this.currentUser.id)
+    this.imageService.getProfilePhoto(this.currentUser.id).subscribe(
+        (res: ImageModel) => {
+          this.profilePhoto = res;
+          this.profilePhoto.picByte = 'data:image/jpeg;base64,' + res.picByte;
+          // this.retrieveResonse = res;
+          // this.base64Data = this.retrieveResonse.picByte;
+          // this.retrievedImage = 'data:image/jpeg;base64,' + this.base64Data;
+          // this.selectedImage = this.retrievedImage;
+        }
+      );
   }
 
 

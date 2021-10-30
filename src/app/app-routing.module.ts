@@ -10,6 +10,8 @@ import { BoardModeratorComponent } from './board-moderator/board-moderator.compo
 import { BoardAdminComponent } from './board-admin/board-admin.component';
 import { SearchComponent } from './search/search.component';
 import { ViewProfileComponent } from './view-profile/view-profile.component';
+import { ProfileEditorComponent } from './profile-editor/profile-editor.component';
+import { ProfilePhotoUploaderComponent } from './profile-photo-uploader/profile-photo-uploader.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -22,6 +24,8 @@ const routes: Routes = [
   { path: 'search', component: SearchComponent },
   { path: 'search/view-profile', component: ViewProfileComponent },
   { path: 'user/view-profile', component: ViewProfileComponent },
+  { path: 'profile/profile-editor', component: ProfileEditorComponent },
+  { path: 'profile-photo-uploader', component: ProfilePhotoUploaderComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 

@@ -15,10 +15,9 @@ const httpOptions = {
 export class ImageService {
   constructor(private http: HttpClient) { }
 
-  
-  public addComment(userId: number, photoId: number, description: String): Observable<any> {
-    return this.http.post<String>(
-      API_URL + "comment/add_comment/" + photoId + "/" + userId, description);
+
+  public addComment(userId: number, imageId: number, description: String): Observable<any> {
+    return this.http.post<String>(API_URL + "comment/add_comment/" + imageId + "/" + userId, description);
   }
 
   public deleteComment(commentId: number): Observable<any> {
@@ -29,21 +28,40 @@ export class ImageService {
     return this.http.get<number>(API_URL + "comment/comments_count/" + imageId);
   }
 
-  public getComments(photoId: number): Observable<CommentModel[]> {
-    return this.http.get<CommentModel[]>(API_URL + "comment/get_comments/" + photoId);
+  public getComments(imageId: number): Observable<CommentModel[]> {
+    return this.http.get<CommentModel[]>(API_URL + "comment/get_comments/" + imageId);
   }
 
-  public getCommentsPaged(photoId: number, pageNumber: number): Observable<CommentModel[]> {
+  public getCommentsPaged(imageId: number, pageNumber: number): Observable<CommentModel[]> {
     return this.http.get<CommentModel[]>(
-      API_URL + "comment/get_comments_paged/" + photoId + "/" + pageNumber);
+      API_URL + "comment/get_comments_paged/" + imageId + "/" + pageNumber);
   }
 
-  public getFeedPhotos(userId: number): Observable<ImageModel[]> {
-    return this.http.get<ImageModel[]>(API_URL + "image/get_feed_photos/" + userId);
+  public getFeedImages(userId: number): Observable<ImageModel[]> {
+    return this.http.get<ImageModel[]>(API_URL + "image/get_feed_images/" + userId);
   }
 
   public changeDescription(imageId: number, description: String): Observable<ImageModel> {
-    console.log(imageId, description)
     return this.http.patch<ImageModel>(API_URL + "image/change_description/" + imageId, description);
+  }
+
+  public uploadImage(userId: number, uploadImageData: FormData): Observable<any> {
+    return this.http.post(API_URL + 'image/upload_image/' + userId, uploadImageData)
+  }
+
+  public uploadProfileImage(userId: number, uploadImageData: FormData): Observable<any> {
+    return this.http.post(API_URL + 'image/upload_profile_image/' + userId, uploadImageData)
+  }
+
+  public getProfilePhoto(userId: number): Observable<ImageModel> {
+    return this.http.get<ImageModel>(API_URL + 'image/get_profile_image/' + userId);
+  }
+
+  public getAllImages(userId: number): Observable<ImageModel[]> {
+    return this.http.get<ImageModel[]>(API_URL + 'image/get/all_images/' + userId);
+  }
+
+  public deleteImage(imageId: number): Observable<any> {
+    return this.http.delete<void>(API_URL + 'image/delete/' + imageId)
   }
 }

@@ -1,7 +1,7 @@
 <div class="album py-5 bg-light">
   <div class="container" style="max-width: 800px;">
 
-    <div *ngFor="let picture of allPhotosResponse">
+    <div *ngFor="let picture of allImagesResponse">
       <div class="card mb-3">
         <div class="card-body">
 
@@ -19,7 +19,7 @@
 
 
           <div *ngFor="let comment of comments">
-            <div *ngIf="picture?.id == comment?.photoId && areCommentsCollapsed == false" class="commentBody">
+            <div *ngIf="picture?.id == comment?.imageId && areCommentsCollapsed == false" class="commentBody">
               <h5 id="commentUserName" (click)="onViewUserProfile(comment.ownerId)" routerLink="view-profile">{{
                 comment.authorName }}:</h5>
               <p id="commentDescription"> {{ comment.description }} </p>
@@ -30,9 +30,11 @@
             </div>
 
           </div>
-          <button *ngIf="photoWithLoadedCommentsId == picture.id && areThereMoreComments == true"  (click)="getCommentsPaged(picture?.id)" style="justify-content: center;" type="button"
+          <div style="text-align: center; ">
+          <button *ngIf="imageWithLoadedCommentsId == picture.id && areThereMoreComments == true"  (click)="getCommentsPaged(picture?.id)" style="justify-content: center;" type="button"
             class="btn btn-outline-primary">Load more comments
           </button>
+        </div>
           <div class="input-group mb-3" id="commentInputBar">
 
             <button (click)="addComment(currentUserId, picture.id, description)" class="btn btn-outline-secondary"

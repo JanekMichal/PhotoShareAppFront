@@ -19,7 +19,7 @@ const API_URL = 'http://localhost:8080/image/';
 
 export class BoardUserComponent implements OnInit {
 
-  allPhotosResponse: ImageModel[];
+  allImagesResponse: ImageModel[];
   currentUser: any;
   currentUserId: number;
   description: String;
@@ -30,7 +30,7 @@ export class BoardUserComponent implements OnInit {
   commentsCount: number;
   commentsPageNumber: number = 0;
   //commentsPageSize: number = 5;
-  photoWithLoadedCommentsId: number;
+  imageWithLoadedCommentsId: number;
   areThereMoreComments: boolean = true;
   commentsLoadedCount: number = 0;
 
@@ -43,11 +43,11 @@ export class BoardUserComponent implements OnInit {
   ngOnInit(): void {
     this.currentUser = this.token.getUser();
     this.currentUserId = this.currentUser.id;
-    this.getFeedPhotos();
+    this.getFeedImages();
   }
 
-  public getCommentsCount(photoId: number): number {
-    this.imageService.getCommentsCount(photoId).subscribe(
+  public getCommentsCount(imageId: number): number {
+    this.imageService.getCommentsCount(imageId).subscribe(
       (response: number) => {
         this.commentsCount = response
         console.log("Response: " + this.commentsCount)
@@ -56,42 +56,42 @@ export class BoardUserComponent implements OnInit {
     return this.commentsCount;
   }
 
-  public addComment(userId: number, photoId: number, description: String): void {
-    this.imageService.addComment(userId, photoId, description).subscribe(
+  public addComment(userId: number, imageId: number, description: String): void {
+    this.imageService.addComment(userId, imageId, description).subscribe(
       (response: number) => {
         this.commentsCount = response;
-        this.getComments(photoId);
+        this.getComments(imageId);
       }
     );
     this.description = ' ';
 
   }
 
-  public deleteComment(commentId: number, photoId: number) {
+  public deleteComment(commentId: number, imageId: number) {
     this.imageService.deleteComment(commentId).subscribe(
-      () => this.getComments(photoId)
+      () => this.getComments(imageId)
     );
   }
 
-  public commentsButtonClick(photoId: number) {
-    if (this.areCommentsCollapsed == true) {
+  public commentsButtonClick(imageId: number) {
+    if (this.areCommentsCollapsed == true || this.imageWithLoadedCommentsId != imageId) {
       this.areCommentsCollapsed = false;
       this.areThereMoreComments = true;
-      this.getCommentsPaged(photoId)
+      this.getCommentsPaged(imageId)
     } else {
       this.areThereMoreComments = false
       this.areCommentsCollapsed = true;
     }
   }
 
-  public getCommentsPaged(photoId: number): void {
-    if (this.photoWithLoadedCommentsId != photoId) {
+  public getCommentsPaged(imageId: number): void {
+    if (this.imageWithLoadedCommentsId != imageId) {
       this.commentsPageNumber = 0;
     }
-    this.imageService.getCommentsPaged(photoId, this.commentsPageNumber).subscribe(
+    this.imageService.getCommentsPaged(imageId, this.commentsPageNumber).subscribe(
       (response: CommentModel[]) => {
-        if (this.photoWithLoadedCommentsId != photoId) {
-          this.photoWithLoadedCommentsId = photoId;
+        if (this.imageWithLoadedCommentsId != imageId) {
+          this.imageWithLoadedCommentsId = imageId;
           this.comments = response;
           this.commentsLoadedCount = response.length
         } else {
@@ -106,7 +106,7 @@ export class BoardUserComponent implements OnInit {
             }
           );
         }
-        this.imageService.getCommentsCount(photoId).subscribe(
+        this.imageService.getCommentsCount(imageId).subscribe(
           (response: number) => {
             this.commentsCount = response
             if (this.commentsLoadedCount == this.commentsCount) {
@@ -124,17 +124,17 @@ export class BoardUserComponent implements OnInit {
     );
   }
 
-  public getComments(photoId: number): void {
-    this.imageService.getComments(photoId).subscribe(
+  public getComments(imageId: number): void {
+    this.imageService.getComments(imageId).subscribe(
       (response: CommentModel[]) => {
         this.comments = response;
         for (let i = 0; i < this.comments.length; i++) {
           this.userService.getUser(this.comments[i].ownerId).subscribe(
             (response: User) => {
               this.comments[i].authorName = response.username;
-              this.imageService.getCommentsCount(this.allPhotosResponse[i].id).subscribe(
+              this.imageService.getCommentsCount(this.allImagesResponse[i].id).subscribe(
                 (response: number) => {
-                  this.allPhotosResponse[i].commentsCount = response;
+                  this.allImagesResponse[i].commentsCount = response;
                 }
               );
             }
@@ -145,26 +145,24 @@ export class BoardUserComponent implements OnInit {
         alert(error.message);
       }
     );
-    //this.areCommentsCollapsed = false;
   }
 
-  public getFeedPhotos(): void {
-    this.http.get<ImageModel[]>(API_URL + "get_feed_photos/" + this.currentUserId).subscribe(
+  public getFeedImages(): void {
+    this.imageService.getFeedImages(this.currentUser.id).subscribe(
       (response: ImageModel[]) => {
-        this.allPhotosResponse = response;
-        for (let i = 0; i < this.allPhotosResponse.length; i++) {
-          this.allPhotosResponse[i].picByte = 'data:image/jpeg;base64,' + this.allPhotosResponse[i].picByte;
-          this.userService.getUser(this.allPhotosResponse[i].ownerId).subscribe(
+        this.allImagesResponse = response;
+        for (let i = 0; i < this.allImagesResponse.length; i++) {
+          this.allImagesResponse[i].picByte = 'data:image/jpeg;base64,' + this.allImagesResponse[i].picByte;
+          this.userService.getUser(this.allImagesResponse[i].ownerId).subscribe(
             (response: User) => {
-              this.allPhotosResponse[i].name = response.username;
+              this.allImagesResponse[i].name = response.username;
             }
           );
-          this.imageService.getCommentsCount(this.allPhotosResponse[i].id).subscribe(
+          this.imageService.getCommentsCount(this.allImagesResponse[i].id).subscribe(
             (response: number) => {
-              this.allPhotosResponse[i].commentsCount = response;
+              this.allImagesResponse[i].commentsCount = response;
             }
           );
-          //console.log(this.allPhotosResponse[i].description);
         }
       },
       (error: HttpErrorResponse) => {

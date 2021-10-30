@@ -36,5 +36,4 @@ export class SearchComponent implements OnInit {
   onViewUserProfile(id: number) {
     this.data.setSearchedUserId(id);
   }
-  
 }
