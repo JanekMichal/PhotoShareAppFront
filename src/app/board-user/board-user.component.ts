@@ -1,15 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { ImageModel } from '../ImageModel';
-import { TokenStorageService } from '../_services/token-storage.service';
-import { UserService } from '../_services/user.service';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { User } from '../user';
-import { DataService } from '../_services/data.service';
-import { CommentModel } from '../CommentModel';
-import { ImageService } from '../_services/image.service';
-import { Observable } from 'rxjs';
-
-const API_URL = 'http://localhost:8080/image/';
+import {Component, OnInit} from '@angular/core';
+import {ImageModel} from '../ImageModel';
+import {TokenStorageService} from '../_services/token-storage.service';
+import {UserService} from '../_services/user.service';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {User} from '../user';
+import {DataService} from '../_services/data.service';
+import {CommentModel} from '../CommentModel';
+import {ImageService} from '../_services/image.service';
 
 @Component({
   selector: 'app-board-user',
@@ -22,23 +19,25 @@ export class BoardUserComponent implements OnInit {
   allImagesResponse: ImageModel[];
   currentUser: any;
   currentUserId: number;
-  description: String;
+  description: string;
 
-  areCommentsCollapsed: boolean = true;
+  areCommentsCollapsed = true;
   comments: CommentModel[];
   comment: CommentModel;
   commentsCount: number;
-  commentsPageNumber: number = 0;
-  //commentsPageSize: number = 5;
+  commentsPageNumber = 0;
+  commentsPageSize = 5;
   imageWithLoadedCommentsId: number;
-  areThereMoreComments: boolean = true;
-  commentsLoadedCount: number = 0;
+  areThereMoreComments = true;
+  commentsLoadedCount = 0;
+
 
   constructor(private userService: UserService,
-    private token: TokenStorageService,
-    private http: HttpClient,
-    private data: DataService,
-    private imageService: ImageService) { }
+              private token: TokenStorageService,
+              private http: HttpClient,
+              private data: DataService,
+              private imageService: ImageService) {
+  }
 
   ngOnInit(): void {
     this.currentUser = this.token.getUser();
@@ -49,14 +48,14 @@ export class BoardUserComponent implements OnInit {
   public getCommentsCount(imageId: number): number {
     this.imageService.getCommentsCount(imageId).subscribe(
       (response: number) => {
-        this.commentsCount = response
-        console.log("Response: " + this.commentsCount)
+        this.commentsCount = response;
+        console.log('Response: ' + this.commentsCount);
       }
     );
     return this.commentsCount;
   }
 
-  public addComment(userId: number, imageId: number, description: String): void {
+  public addComment(userId: number, imageId: number, description: string): void {
     this.imageService.addComment(userId, imageId, description).subscribe(
       (response: number) => {
         this.commentsCount = response;
@@ -67,56 +66,56 @@ export class BoardUserComponent implements OnInit {
 
   }
 
-  public deleteComment(commentId: number, imageId: number) {
+  public deleteComment(commentId: number, imageId: number): void {
     this.imageService.deleteComment(commentId).subscribe(
       () => this.getComments(imageId)
     );
   }
 
-  public commentsButtonClick(imageId: number) {
-    if (this.areCommentsCollapsed == true || this.imageWithLoadedCommentsId != imageId) {
+  public commentsButtonClick(imageId: number): void {
+    if (this.areCommentsCollapsed === true || this.imageWithLoadedCommentsId !== imageId) {
       this.areCommentsCollapsed = false;
       this.areThereMoreComments = true;
-      this.getCommentsPaged(imageId)
+      this.getCommentsPaged(imageId);
     } else {
-      this.areThereMoreComments = false
+      this.areThereMoreComments = false;
       this.areCommentsCollapsed = true;
     }
   }
 
   public getCommentsPaged(imageId: number): void {
-    if (this.imageWithLoadedCommentsId != imageId) {
+    if (this.imageWithLoadedCommentsId !== imageId) {
       this.commentsPageNumber = 0;
     }
     this.imageService.getCommentsPaged(imageId, this.commentsPageNumber).subscribe(
       (response: CommentModel[]) => {
-        if (this.imageWithLoadedCommentsId != imageId) {
+        if (this.imageWithLoadedCommentsId !== imageId) {
           this.imageWithLoadedCommentsId = imageId;
           this.comments = response;
-          this.commentsLoadedCount = response.length
+          this.commentsLoadedCount = response.length;
         } else {
           this.comments = this.comments.concat(response);
-          this.commentsLoadedCount = this.commentsLoadedCount + response.length
+          this.commentsLoadedCount = this.commentsLoadedCount + response.length;
         }
 
-        for (let i = 0; i < this.comments.length; i++) {
-          this.userService.getUser(this.comments[i].ownerId).subscribe(
-            (response: User) => {
-              this.comments[i].authorName = response.username
+        this.comments.forEach(comment => {
+          this.userService.getUser(comment.ownerId).subscribe(
+            (userResponse: User) => {
+              comment.authorName = userResponse.username;
             }
           );
-        }
+        });
         this.imageService.getCommentsCount(imageId).subscribe(
-          (response: number) => {
-            this.commentsCount = response
-            if (this.commentsLoadedCount == this.commentsCount) {
-              this.areThereMoreComments = false
+          (commentsCountResponse: number) => {
+            this.commentsCount = commentsCountResponse;
+            if (this.commentsLoadedCount === this.commentsCount) {
+              this.areThereMoreComments = false;
             } else {
-              this.areThereMoreComments = true
+              this.areThereMoreComments = true;
             }
           }
-        )
-        this.commentsPageNumber++
+        );
+        this.commentsPageNumber++;
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -130,11 +129,11 @@ export class BoardUserComponent implements OnInit {
         this.comments = response;
         for (let i = 0; i < this.comments.length; i++) {
           this.userService.getUser(this.comments[i].ownerId).subscribe(
-            (response: User) => {
-              this.comments[i].authorName = response.username;
+            (userResponse: User) => {
+              this.comments[i].authorName = userResponse.username;
               this.imageService.getCommentsCount(this.allImagesResponse[i].id).subscribe(
-                (response: number) => {
-                  this.allImagesResponse[i].commentsCount = response;
+                (commentsCountResponse: number) => {
+                  this.allImagesResponse[i].commentsCount = commentsCountResponse;
                 }
               );
             }
@@ -151,19 +150,19 @@ export class BoardUserComponent implements OnInit {
     this.imageService.getFeedImages(this.currentUser.id).subscribe(
       (response: ImageModel[]) => {
         this.allImagesResponse = response;
-        for (let i = 0; i < this.allImagesResponse.length; i++) {
-          this.allImagesResponse[i].picByte = 'data:image/jpeg;base64,' + this.allImagesResponse[i].picByte;
-          this.userService.getUser(this.allImagesResponse[i].ownerId).subscribe(
-            (response: User) => {
-              this.allImagesResponse[i].name = response.username;
+        this.allImagesResponse.forEach(item => {
+          item.picByte = 'data:image/jpeg;base64,' + item.picByte;
+          this.userService.getUser(item.ownerId).subscribe(
+            (userResponse: User) => {
+              item.name = userResponse.username;
             }
           );
-          this.imageService.getCommentsCount(this.allImagesResponse[i].id).subscribe(
-            (response: number) => {
-              this.allImagesResponse[i].commentsCount = response;
+          this.imageService.getCommentsCount(item.id).subscribe(
+            (commentsCountResponse: number) => {
+              item.commentsCount = commentsCountResponse;
             }
           );
-        }
+        });
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -171,7 +170,7 @@ export class BoardUserComponent implements OnInit {
     );
   }
 
-  onViewUserProfile(id: number) {
+  onViewUserProfile(id: number): void {
     this.data.setSearchedUserId(id);
   }
 }

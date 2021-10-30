@@ -6,6 +6,7 @@ import {DataService} from '../_services/data.service';
 import {FollowService} from '../_services/follow.service';
 import {TokenStorageService} from '../_services/token-storage.service';
 import {UserService} from '../_services/user.service';
+import {ImageService} from '../_services/image.service';
 
 @Component({
   selector: 'app-view-profile',
@@ -16,38 +17,31 @@ export class ViewProfileComponent implements OnInit {
   [x: string]: any;
 
   currentUser: any;
-  currentUserData: User;
   currentUserId: number;
-
   editUser: User;
-
-  nameForm = '';
-  userNameForm = '';
-  emailForm = '';
-
-  private server = 'http://localhost:8080';
-
   selectedFile: File;
   retrievedImage: any;
-  base64Data: any;
   retrieveResponse: any;
   message: string;
   imageName: any;
-  allPhotosResponse: ImageModel[];
-  allPhotosData: any = [];
+  allImagesResponse: ImageModel[];
   selectedImage: any;
   searchedUserData: User;
   searchedUserId: number;
 
+
   isCurrentUserFollowingSearchedUser: boolean;
   followersList: User[];
   followingList: User[];
+  followersCount: number;
+  followingCount: number;
 
   constructor(private token: TokenStorageService,
               private userService: UserService,
               private http: HttpClient,
               private data: DataService,
-              private followService: FollowService) {
+              private followService: FollowService,
+              private imageService: ImageService) {
   }
 
   ngOnInit(): void {
@@ -55,7 +49,7 @@ export class ViewProfileComponent implements OnInit {
     this.data.searchedUserId.subscribe(message => this.searchedUserId = message);
     this.getUserData();
     this.isFollowing();
-    this.getAllPhotos();
+    this.getAllImages();
     this.getFollowers();
     this.getFollowing();
     this.getFollowersCount();
@@ -81,7 +75,6 @@ export class ViewProfileComponent implements OnInit {
     this.followService.getFollowers(this.searchedUserId).subscribe(
       (response: User[]) => {
         this.followersList = response;
-        console.log(this.followersList);
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -94,7 +87,6 @@ export class ViewProfileComponent implements OnInit {
     this.followService.getFollowing(this.searchedUserId).subscribe(
       (response: User[]) => {
         this.followingList = response;
-        console.log(this.followingList);
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -150,17 +142,15 @@ export class ViewProfileComponent implements OnInit {
 
   // -------------------------------- IMAGES -------------------------------
 
-  public onOpenViewPhoto(pictureId: number): void {
+  public onOpenViewImage(pictureId: number): void {
     this.getImage(pictureId);
   }
 
-  // TODO: do poprawy
-  public getAllPhotos(): void {
-    this.http.get<ImageModel[]>(this.server + '/image/get/allphotos/' + this.searchedUserId).subscribe(
+  public getAllImages(): void {
+    this.imageService.getAllImages(this.searchedUserId).subscribe(
       (response: ImageModel[]) => {
-        this.allPhotosResponse = response;
-
-        this.allPhotosResponse.forEach(item => {
+        this.allImagesResponse = response;
+        this.allImagesResponse.forEach(item => {
           item.picByte = 'data:image/jpeg;base64,' + item.picByte;
         });
       },
@@ -171,14 +161,12 @@ export class ViewProfileComponent implements OnInit {
   }
 
   public getImage(imageId: number): void {
-    this.http.get('http://localhost:8080/image/get/' + imageId)
-      .subscribe(
-        res => {
-          this.retrieveResponse = res;
-          this.base64Data = this.retrieveResponse.picByte;
-          this.retrievedImage = 'data:image/jpeg;base64,' + this.base64Data;
-          this.selectedImage = this.retrievedImage;
-        }
-      );
+    this.imageService.getImage(imageId).subscribe(
+      res => {
+        this.retrieveResponse = res;
+        this.retrievedImage = 'data:image/jpeg;base64,' + res.picByte;
+        this.selectedImage = this.retrievedImage;
+      }
+    );
   }
 }

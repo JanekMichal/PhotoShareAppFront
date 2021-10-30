@@ -8,14 +8,13 @@
           <h5 (click)="onViewUserProfile(picture?.ownerId)" class="card-title" routerLink="view-profile">
             {{picture.name}}</h5>
         </div>
-        <img [src]="picture.picByte" class="card-img-top">
+        <img [src]="picture.picByte" class="card-img-top" alt="Picture on the main page">
         <div class="card-body">
           <p class="card-text">{{ picture.description }} </p>
-          <button class="btn"><i class="bi bi-heart"></i> </button>
-          <button class="btn" (click)="commentsButtonClick(picture?.id)"><i class="bi bi-chat"></i> </button> {{
-          picture.commentsCount}}
-          <button class="btn"><i class="bi bi-share"></i> </button>
-
+          <button class="btn"><i class="bi bi-heart"></i></button>
+          <button class="btn" (click)="commentsButtonClick(picture?.id)"><i class="bi bi-chat"></i></button>
+          {{ picture.commentsCount }}
+          <button class="btn"><i class="bi bi-share"></i></button>
 
 
           <div *ngFor="let comment of comments">
@@ -25,21 +24,23 @@
               <p id="commentDescription"> {{ comment.description }} </p>
 
               <button *ngIf="currentUserId == comment.ownerId" class="btn"
-                (click)="deleteComment(comment.id, picture.id)"><i class="bi bi-x-lg" id="deleteCommentIcon"></i>
+                      (click)="deleteComment(comment.id, picture.id)"><i class="bi bi-x-lg" id="deleteCommentIcon"></i>
               </button>
             </div>
 
           </div>
           <div style="text-align: center; ">
-          <button *ngIf="imageWithLoadedCommentsId == picture.id && areThereMoreComments == true"  (click)="getCommentsPaged(picture?.id)" style="justify-content: center;" type="button"
-            class="btn btn-outline-primary">Load more comments
-          </button>
-        </div>
+            <button *ngIf="imageWithLoadedCommentsId == picture.id && areThereMoreComments == true"
+                    (click)="getCommentsPaged(picture?.id)" style="justify-content: center;" type="button"
+                    class="btn btn-outline-primary">Load more comments
+            </button>
+          </div>
           <div class="input-group mb-3" id="commentInputBar">
 
             <button (click)="addComment(currentUserId, picture.id, description)" class="btn btn-outline-secondary"
-              type="button" id="button-addComment">Add
-              Comment!</button>
+                    type="button" id="button-addComment">Add
+              Comment!
+            </button>
             <input [(ngModel)]="description" type="text" class="form-control" placeholder="">
           </div>
         </div>

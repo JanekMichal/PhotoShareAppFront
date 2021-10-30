@@ -1,19 +1,17 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { ImageModel } from '../ImageModel';
-import { CommentModel } from '../CommentModel';
-const API_URL = 'http://localhost:8080/';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {ImageModel} from '../ImageModel';
+import {CommentModel} from '../CommentModel';
 
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-};
+const API_URL = 'http://localhost:8080/';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ImageService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
 
   public addComment(userId: number, imageId: number, description: string): Observable<any> {
@@ -63,5 +61,9 @@ export class ImageService {
 
   public deleteImage(imageId: number): Observable<any> {
     return this.http.delete<void>(API_URL + 'image/delete/' + imageId);
+  }
+
+  public getImage(imageId: number): Observable<ImageModel> {
+    return this.http.get<ImageModel>(API_URL + 'image/get/' + imageId);
   }
 }

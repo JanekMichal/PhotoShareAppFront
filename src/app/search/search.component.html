@@ -1,25 +1,27 @@
 <div class="container" id="main-container">
-	<h2 style="text-align: center;">Found Users: </h2>
-	<table class="table">
-		<thead class="thead-dark">
-			<tr>
-				<th scope="col">User name</th>
+  <h2 style="text-align: center;">Found Users: </h2>
+  <table class="table">
+    <thead class="thead-dark">
+    <tr>
+      <th scope="col">User name</th>
 
-				<th scope="col">Name </th>
-				<th scope="col"></th>
-			</tr>
-		</thead>
-		<tbody *ngFor="let user of searchedUsers">
-			<tr>
-				<td>{{user?.username}}</td>
-				<td>{{ user?.name }}</td>
-				<td>
-					<div class="btn-group" role="group">
-						<button (click)="onViewUserProfile(user?.id)" routerLink="view-profile" type="button" class="btn btn-outline-primary">View
-							profile</button>
-					</div>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+      <th scope="col">Name</th>
+      <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody *ngFor="let user of searchedUsers">
+    <tr>
+      <td>{{user?.username}}</td>
+      <td>{{ user?.name }}</td>
+      <td>
+        <div class="btn-group" role="group">
+          <button (click)="onViewUserProfile(user?.id)" routerLink="view-profile" type="button"
+                  class="btn btn-outline-primary">View
+            profile
+          </button>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
 </div>

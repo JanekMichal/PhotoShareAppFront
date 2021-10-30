@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { TokenStorageService } from './_services/token-storage.service';
-import { DataService } from './_services/data.service';
+import {Component, OnInit} from '@angular/core';
+import {TokenStorageService} from './_services/token-storage.service';
+import {DataService} from './_services/data.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -17,8 +18,10 @@ export class AppComponent implements OnInit {
   id: number;
 
   searchName: string;
+  title: string;
 
-  constructor(private tokenStorageService: TokenStorageService, private data: DataService) { }
+  constructor(private tokenStorageService: TokenStorageService, private data: DataService) {
+  }
 
   ngOnInit(): void {
     // this.data.currentMessage.subscribe(message => this.searchName = message);
@@ -43,7 +46,7 @@ export class AppComponent implements OnInit {
     window.location.reload();
   }
 
-  public onSearchUser() {
+  public onSearchUser(): void {
     this.data.changeMessage(this.searchName);
   }
 }

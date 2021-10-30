@@ -1,8 +1,8 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
-import { User } from '../user';
-import { UserService } from '../_services/user.service';
+import {HttpErrorResponse} from '@angular/common/http';
+import {Component, OnInit} from '@angular/core';
+import {User} from '../user';
+import {UserService} from '../_services/user.service';
+
 @Component({
   selector: 'app-board-admin',
   templateUrl: './board-admin.component.html',
@@ -18,9 +18,10 @@ export class BoardAdminComponent implements OnInit {
   userNameForm = '';
   emailForm = '';
 
-  pageNumber: number = 0;
+  pageNumber = 0;
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService) {
+  }
 
   ngOnInit(): void {
     this.getUsersPage();
@@ -40,7 +41,7 @@ export class BoardAdminComponent implements OnInit {
   public getUsersPage(): void {
     this.userService.getUsersPage(this.pageNumber).subscribe(
       (response: User[]) => {
-        if(this.pageNumber == 0) { 
+        if (this.pageNumber === 0) {
           this.users = response;
         } else {
           this.users = this.users.concat(response);
@@ -50,7 +51,7 @@ export class BoardAdminComponent implements OnInit {
         //   this.users[i] = response[i];
         //   console.log(response[i])
         // }
-         
+
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -61,7 +62,7 @@ export class BoardAdminComponent implements OnInit {
   public getUsersPage2(): void {
     this.userService.getUsersPage(1).subscribe(
       (response: User[]) => {
-        if(this.pageNumber == 0) {
+        if (this.pageNumber === 0) {
           this.pageNumber++;
           this.users = response;
         } else {
@@ -71,14 +72,13 @@ export class BoardAdminComponent implements OnInit {
         //   this.users[i] = response[i];
         //   console.log(response[i])
         // }
-         
+
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
       }
     );
   }
-
 
 
   public onDeleteUser(userId: number): void {

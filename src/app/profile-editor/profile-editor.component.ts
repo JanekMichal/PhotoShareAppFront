@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {FormControl} from '@angular/forms';
 
 @Component({
   selector: 'app-profile-editor',
@@ -8,7 +8,9 @@ import { FormControl } from '@angular/forms';
 })
 export class ProfileEditorComponent implements OnInit {
   name = new FormControl('');
-  constructor() { }
+
+  constructor() {
+  }
 
   ngOnInit(): void {
   }

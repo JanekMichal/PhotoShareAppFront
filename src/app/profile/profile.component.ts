@@ -15,10 +15,13 @@ import {ImageService} from '../_services/image.service';
 export class ProfileComponent implements OnInit {
   [x: string]: any;
 
+  message: string;
+
   // -------------- User --------------
   currentUser: any;
-  currentUserData: User;
   currentUserId: number;
+  currentUserData: User;
+
 
   editUser: User;
 
@@ -30,24 +33,19 @@ export class ProfileComponent implements OnInit {
 
   followingCount: number;
   followersCount: number;
-
+  followersList: User[];
+  followingList: User[];
 
   // -------------- IMAGES --------------
 
   descriptionFormTextArea = '';
   selectedFile: File;
   retrievedImage: any;
-  base64Data: any;
-  retrieveResonse: any;
-  message: string;
+  retrieveResponse: any;
+  profilePhoto: ImageModel;
   imageName: any;
   allImagesResponse: ImageModel[];
-  allImagesData: any = [];
-  profilePhoto: ImageModel;
   selectedImage: any;
-
-  followersList: User[];
-  followingList: User[];
   currentImageId: number;
 
   constructor(private token: TokenStorageService,
@@ -73,8 +71,9 @@ export class ProfileComponent implements OnInit {
     this.currentUser = this.token.getUser();
     this.currentUserId = this.currentUser.id;
     this.getCurrentUserF();
-    this.getAllImages();
     this.getProfileImage();
+    this.getAllImages();
+
     this.getFollowingCount();
     this.getFollowersCount();
     this.getFollowers();
@@ -200,7 +199,6 @@ export class ProfileComponent implements OnInit {
   //  --------------------------------------- IMAGES -----------------------------------------------
 
   public onChangeDescription(): void {
-    console.log(this.currentImageId, this.descriptionFormTextArea);
     this.imageService.changeDescription(this.currentImageId, this.descriptionFormTextArea).subscribe();
     this.refresh();
   }
@@ -222,8 +220,7 @@ export class ProfileComponent implements OnInit {
 
   public onDeleteImage(imageId: number): void {
     this.imageService.deleteImage(imageId).subscribe(
-      (response: void) => {
-        console.log(response);
+      () => {
         this.refresh();
       },
       (error: HttpErrorResponse) => {
@@ -263,31 +260,21 @@ export class ProfileComponent implements OnInit {
   }
 
   public getProfileImage(): void {
-    console.log(this.currentUser.id);
     this.imageService.getProfilePhoto(this.currentUser.id).subscribe(
       (res: ImageModel) => {
         this.profilePhoto = res;
         this.profilePhoto.picByte = 'data:image/jpeg;base64,' + res.picByte;
-        // this.retrieveResonse = res;
-        // this.base64Data = this.retrieveResonse.picByte;
-        // this.retrievedImage = 'data:image/jpeg;base64,' + this.base64Data;
-        // this.selectedImage = this.retrievedImage;
       }
     );
   }
 
-
   public getImage(imageId: number): void {
-    // Make a call to Sprinf Boot to get the Image Bytes.
-    this.http.get('http://localhost:8080/image/get/' + imageId)
-      .subscribe(
-        res => {
-          this.retrieveResonse = res;
-          this.base64Data = this.retrieveResonse.picByte;
-          this.retrievedImage = 'data:image/jpeg;base64,' + this.base64Data;
-          this.selectedImage = this.retrievedImage;
-        }
-      );
+    this.imageService.getImage(imageId).subscribe(
+      res => {
+        this.retrieveResponse = res;
+        this.retrievedImage = 'data:image/jpeg;base64,' + res.picByte;
+        this.selectedImage = this.retrievedImage;
+      }
+    );
   }
-
 }

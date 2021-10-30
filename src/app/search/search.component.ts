@@ -1,8 +1,9 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { User } from '../user';
-import { UserService } from '../_services/user.service';
-import { DataService } from '../_services/data.service';
+import {HttpErrorResponse} from '@angular/common/http';
+import {Component, OnInit} from '@angular/core';
+import {User} from '../user';
+import {UserService} from '../_services/user.service';
+import {DataService} from '../_services/data.service';
+
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
@@ -10,19 +11,20 @@ import { DataService } from '../_services/data.service';
 })
 export class SearchComponent implements OnInit {
   searchedUsers: User[];
-  constructor(private userService: UserService, private data: DataService) { }
+
+  constructor(private userService: UserService, private data: DataService) {
+  }
 
   searchName: string;
 
   ngOnInit(): void {
     this.data.currentMessage.subscribe(message => this.searchName = message);
-    console.log(this.searchName)
-    if (this.searchName != "") {
+    if (this.searchName !== '') {
       this.onSearchForUser();
     }
   }
 
-  onSearchForUser() {
+  onSearchForUser(): void {
     this.userService.searchForUser(this.searchName).subscribe(
       (response: User[]) => {
         this.searchedUsers = response;
@@ -33,7 +35,7 @@ export class SearchComponent implements OnInit {
     );
   }
 
-  onViewUserProfile(id: number) {
+  onViewUserProfile(id: number): void {
     this.data.setSearchedUserId(id);
   }
 }

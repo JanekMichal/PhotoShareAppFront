@@ -1,24 +1,25 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {BehaviorSubject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
 
-  private messageSource = new BehaviorSubject<string>("");
+  private messageSource = new BehaviorSubject<string>('');
   currentMessage = this.messageSource.asObservable();
 
   private searchedUserIdSource = new BehaviorSubject<number>(0);
-  searchedUserId = this.searchedUserIdSource.asObservable();   
-  
-  constructor() { }
+  searchedUserId = this.searchedUserIdSource.asObservable();
 
-  changeMessage(message: string) {
+  constructor() {
+  }
+
+  changeMessage(message: string): void {
     this.messageSource.next(message);
   }
 
-  setSearchedUserId(id: number) {
+  setSearchedUserId(id: number): void {
     this.searchedUserIdSource.next(id);
   }
 }

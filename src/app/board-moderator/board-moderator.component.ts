@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { UserService } from '../_services/user.service';
+import {Component, OnInit} from '@angular/core';
+import {UserService} from '../_services/user.service';
 
 @Component({
   selector: 'app-board-moderator',
@@ -10,7 +10,8 @@ export class BoardModeratorComponent implements OnInit {
 
   content: string;
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService) {
+  }
 
   ngOnInit(): void {
     this.userService.getModeratorBoard().subscribe(

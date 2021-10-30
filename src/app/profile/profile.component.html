@@ -8,7 +8,7 @@
           <strong>{{ currentUser?.username }}</strong> Profile
         </h3>
       </header>
-      <img [src]="profilePhoto.picByte" class="rounded-circle">
+      <img [src]="profilePhoto.picByte" class="rounded-circle" alt="profile photo">
       <br>
       <!-- <p>
         <strong>Email:</strong>
@@ -21,7 +21,7 @@
 
       <!-- <i  routerLink="profile-editor" type="button" class="btn btn-outline-primary">Edit profile</i><br> -->
 
-      <i (click)="onOpenModal(user, 'edit')" type="button" class="btn btn-outline-primary">Edit profile</i><br>
+      <i (click)="onOpenModal(currentUser, 'edit')"  class="btn btn-outline-primary">Edit profile</i><br>
       <br>
     </div>
     <div class="col">
@@ -30,7 +30,7 @@
         {{ followersCount }}
       </h4>
 
-      <i type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#followersModal">Show
+      <i class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#followersModal">Show
         followers</i><br>
       <br>
     </div>
@@ -39,7 +39,7 @@
         <strong>Following: </strong>
         {{ followingCount }}
       </h4>
-      <i type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#followingModal">Show
+      <i  class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#followingModal">Show
         following</i><br>
       <br>
     </div>
@@ -68,6 +68,43 @@
   <div class="container row">
     <div class="col-md-12">
       <div *ngIf=message>{{message}}</div>
+    </div>
+  </div>
+
+  <!-- All images -->
+  <div class="album py-5 bg-light">
+    <div class="container">
+
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        <div *ngFor="let picture of allImagesResponse">
+          <div class="col">
+            <div class="card shadow-sm ">
+              <div class="img-hover-zoom">
+                <a (click)="onOpenViewImage(picture.id)">
+                  <img [src]="picture.picByte" class="img-fluid" alt="photo on your profile">
+                </a>
+              </div>
+              <div class="card-body" (click)="onOpenViewImage(picture.id)">
+                <p class="card-text">{{ picture.description }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <button (click)="onOpenViewImage(picture.id)" type="button" class="btn btn-sm btn-outline-secondary"
+                            data-bs-toggle="modal" data-bs-target="#imageModal">View
+                    </button>
+                    <button (click)="onDeleteImage(picture.id)" type="button"
+                            class="btn btn-sm btn-outline-secondary">Delete
+                    </button>
+                    <button (click)="onOpenDescriptionModal(picture.description, picture.id)" type="button"
+                            class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal"
+                            data-bs-target="#descriptionModal">Description
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -144,42 +181,6 @@
   </div>
 
 
-  <!-- All images -->
-  <div class="album py-5 bg-light">
-    <div class="container">
-
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-        <div *ngFor="let picture of allImagesResponse">
-          <div class="col">
-            <div class="card shadow-sm ">
-              <div class="img-hover-zoom">
-                <a (click)="onOpenViewImage(picture.id)">
-                  <img [src]="picture.picByte" class="img-fluid">
-                </a>
-              </div>
-              <div class="card-body" (click)="onOpenViewImage(picture.id)">
-                <p class="card-text">{{ picture.description }}</p>
-                <div class="d-flex justify-content-between align-items-center">
-                  <div class="btn-group">
-                    <button (click)="onOpenViewImage(picture.id)" type="button" class="btn btn-sm btn-outline-secondary"
-                            data-bs-toggle="modal" data-bs-target="#imageModal">View
-                    </button>
-                    <button (click)="onDeleteImage(picture.id)" type="button"
-                            class="btn btn-sm btn-outline-secondary">Delete
-                    </button>
-                    <button (click)="onOpenDescriptionModal(picture.description, picture.id)" type="button"
-                            class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal"
-                            data-bs-target="#descriptionModal">Description
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 
 
@@ -214,7 +215,7 @@
     <div class="modal-content">
 
       <div class="modal-body">
-        <img [src]="selectedImage" class="img-fluid">
+        <img [src]="selectedImage" class="img-fluid" alt="image you just selected to preview">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -235,17 +236,17 @@
 
         <div class="mb-3">
           <label for="nameInput" class="form-label">Name</label>
-          <input type="text" [(ngModel)]="nameForm">
+          <input id="nameInput" type="text" [(ngModel)]="nameForm">
         </div>
 
         <div class="mb-3">
           <label for="userNameInput" class="form-label">User name</label>
-          <input type="text" [(ngModel)]="userNameForm">
+          <input id="userNameInput" type="text" [(ngModel)]="userNameForm">
         </div>
 
         <div class="mb-3">
           <label for="emailInput" class="form-label">Email</label>
-          <input type="text" [(ngModel)]="emailForm">
+          <input id="emailInput" type="text" [(ngModel)]="emailForm">
         </div>
 
         <!-- <div class="alert alert-danger"

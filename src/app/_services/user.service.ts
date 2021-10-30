@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { User } from '../user';
-import { TokenStorageService } from './token-storage.service';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {User} from '../user';
+import {TokenStorageService} from './token-storage.service';
 
 const API_URL = 'http://localhost:8080/api/test/';
 
@@ -13,18 +13,19 @@ export class UserService {
   currentUser: any;
   currentUserId: number;
 
-  constructor(private http: HttpClient, private token: TokenStorageService) { }
+  constructor(private http: HttpClient, private token: TokenStorageService) {
+  }
 
   getPublicContent(): Observable<any> {
-    return this.http.get(API_URL + 'all', { responseType: 'text' });
+    return this.http.get(API_URL + 'all', {responseType: 'text'});
   }
 
   getUserBoard(): Observable<any> {
-    return this.http.get(API_URL + 'user', { responseType: 'text' });
+    return this.http.get(API_URL + 'user', {responseType: 'text'});
   }
 
   getModeratorBoard(): Observable<any> {
-    return this.http.get(API_URL + 'mod', { responseType: 'text' });
+    return this.http.get(API_URL + 'mod', {responseType: 'text'});
   }
 
   getUsers(): Observable<User[]> {
@@ -45,23 +46,23 @@ export class UserService {
     return this.http.get<User>(API_URL + 'profile/' + userId);
   }
 
-  searchForUser(name: String): Observable<User[]> {
-    return this.http.get<User[]>(API_URL + "search/" + name);
+  searchForUser(name: string): Observable<User[]> {
+    return this.http.get<User[]>(API_URL + 'search/' + name);
   }
 
   deleteUser(userId: number): Observable<void> {
     return this.http.delete<void>(API_URL + 'admin/delete/id/' + userId);
   }
 
-  editName(user: User, editUserNameStr: String): Observable<User> {
-    return this.http.patch<User>(API_URL + 'profile/' + user.id + "/" + editUserNameStr, user)
+  editName(user: User, editUserNameStr: string): Observable<User> {
+    return this.http.patch<User>(API_URL + 'profile/' + user.id + '/' + editUserNameStr, user);
   }
 
-  editUserName(user: User, editUserNameStr: String): Observable<User> {
-    return this.http.patch<User>(API_URL + 'profile/' + user.id + "/username/" + editUserNameStr, user)
+  editUserName(user: User, editUserNameStr: string): Observable<User> {
+    return this.http.patch<User>(API_URL + 'profile/' + user.id + '/username/' + editUserNameStr, user);
   }
 
-  editEmail(user: User, editEmailStr: String): Observable<User> {
-    return this.http.patch<User>(API_URL + 'profile/' + user.id + "/email/" + editEmailStr, user)
+  editEmail(user: User, editEmailStr: string): Observable<User> {
+    return this.http.patch<User>(API_URL + 'profile/' + user.id + '/email/' + editEmailStr, user);
   }
 }

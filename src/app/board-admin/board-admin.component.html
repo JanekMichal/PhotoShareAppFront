@@ -2,34 +2,35 @@
   <h2 style="text-align: center;">Wszyscy użytkownicy: </h2>
   <table class="table">
     <thead class="thead-dark">
-      <tr>
-        <th scope="col">ID</th>
-        <th scope="col">User name</th>
-        <th scope="col">E-mail</th>
-        <th scope="col">Name </th>
-        <th scope="col">Actions</th>
-      </tr>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">User name</th>
+      <th scope="col">E-mail</th>
+      <th scope="col">Name</th>
+      <th scope="col">Actions</th>
+    </tr>
     </thead>
     <tbody *ngFor="let user of users">
-      <tr>
-        <th scope="row">{{user?.id}}</th>
-        <td>{{user?.username}}</td>
-        <td>{{user?.email}}</td>
-        <td>{{ user?.name }}</td>
-        <td>
-          <div class="btn-group" role="group">
-            <i (click)="onOpenModal(user, 'edit')" type="button" class="btn btn-outline-primary">Edit</i>
-            <button (click)="onOpenModal(user, 'delete')" type="button" class="btn btn-outline-primary">Delete</button>
-          </div>
-        </td>
+    <tr>
+      <th scope="row">{{user?.id}}</th>
+      <td>{{user?.username}}</td>
+      <td>{{user?.email}}</td>
+      <td>{{ user?.name }}</td>
+      <td>
+        <div class="btn-group" role="group">
+          <i (click)="onOpenModal(user, 'edit')" class="btn btn-outline-primary">Edit</i>
+          <button (click)="onOpenModal(user, 'delete')" type="button" class="btn btn-outline-primary">Delete</button>
+        </div>
+      </td>
 
-      </tr>
+    </tr>
     </tbody>
 
   </table>
   <div style="justify-content: center; display: flex;">
     <button (click)="getUsersPage()" style="justify-content: center;" type="button" class="btn btn-outline-primary">GET
-      MORE</button>
+      MORE
+    </button>
   </div>
 
 </div>
@@ -39,7 +40,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Edit User</h5>
+        <h5 class="modal-title">Edit User</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
@@ -47,21 +48,21 @@
         <!-- <form #editForm="ngForm"> -->
         <div class="mb-3">
           <label for="nameInput" class="form-label">Name</label>
-          <input type="text" [(ngModel)]="nameForm">
+          <input id="nameInput" type="text" [(ngModel)]="nameForm">
         </div>
 
         <div class="mb-3">
           <label for="userNameInput" class="form-label">User name</label>
-          <input type="text" [(ngModel)]="userNameForm">
+          <input id="userNameInput" type="text" [(ngModel)]="userNameForm">
         </div>
 
         <div class="mb-3">
           <label for="emailInput" class="form-label">Email</label>
-          <input type="text" [(ngModel)]="emailForm">
+          <input id="emailInput" type="text" [(ngModel)]="emailForm">
         </div>
 
-        <!-- <div class="alert alert-danger" 
-          role="alert" 
+        <!-- <div class="alert alert-danger"
+          role="alert"
           *ngIf="editUser.name === ''">
             Username is required!
           </div> -->
@@ -70,7 +71,8 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           <button (click)="onEditUserData(editUser)" data-bs-dismiss="modal" type="button" class="btn btn-primary">Save
-            changes</button>
+            changes
+          </button>
         </div>
         <!-- </form> -->
       </div>
@@ -92,7 +94,8 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button (click)="onDeleteUser(deleteUser?.id)" type="button" class="btn btn-primary"
-          data-bs-dismiss="modal">Delete</button>
+                data-bs-dismiss="modal">Delete
+        </button>
       </div>
     </div>
   </div>

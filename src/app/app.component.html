@@ -4,36 +4,38 @@
       <a href="#" class="navbar-brand">PhotoShareApp</a>
       <ul class="navbar-nav me-auto mb-2 mb-lg-0" routerLinkActive="active">
         <li class="nav-item">
-          <a href="/home" class="nav-link" routerLink="home">Home </a>
+          <a class="nav-link" routerLink="home">Home </a>
         </li>
         <li class="nav-item" *ngIf="showAdminBoard">
-          <a href="/admin" class="nav-link" routerLink="admin">Admin Board</a>
+          <a class="nav-link" routerLink="admin">Admin Board</a>
         </li>
         <li class="nav-item" *ngIf="showModeratorBoard">
-          <a href="/mod" class="nav-link" routerLink="mod">Moderator Board</a>
+          <a class="nav-link" routerLink="mod">Moderator Board</a>
         </li>
         <li class="nav-item">
-          <a href="/user" class="nav-link" *ngIf="isLoggedIn" routerLink="user">User</a>
+          <a class="nav-link" *ngIf="isLoggedIn" routerLink="user">User</a>
         </li>
       </ul>
 
       <ul class="navbar-nav ml-auto" *ngIf="!isLoggedIn">
         <li class="nav-item">
-          <a href="/register" class="nav-link" routerLink="register">Sign Up</a>
+          <a class="nav-link" routerLink="register">Sign Up</a>
         </li>
         <li class="nav-item">
-          <a href="/login" class="nav-link" routerLink="login">Login</a>
+          <a class="nav-link" routerLink="login">Login</a>
         </li>
       </ul>
 
-      <div class="d-flex" >
-        <input [(ngModel)]="searchName" *ngIf="isLoggedIn" class="form-control me-2" type="text" placeholder="Search" >
-        <button (click)="onSearchUser()"  routerLink="search" class="btn btn-outline-success" type="submit" *ngIf="isLoggedIn">Search</button>
+      <div class="d-flex">
+        <input [(ngModel)]="searchName" *ngIf="isLoggedIn" class="form-control me-2" type="text" placeholder="Search">
+        <button (click)="onSearchUser()" routerLink="search" class="btn btn-outline-success" type="submit"
+                *ngIf="isLoggedIn">Search
+        </button>
       </div>
 
       <ul class="navbar-nav ml-auto" *ngIf="isLoggedIn">
         <li class="nav-item">
-          <a href="/profile" class="nav-link" routerLink="profile">{{ username }}</a>
+          <a class="nav-link" routerLink="profile">{{ username }}</a>
         </li>
         <li class="nav-item">
           <a href class="nav-link" (click)="logout()">LogOut</a>
