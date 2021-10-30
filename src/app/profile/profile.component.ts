@@ -1,11 +1,11 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { ImageModel } from '../ImageModel';
-import { User } from '../user';
-import { TokenStorageService } from '../_services/token-storage.service';
-import { UserService } from '../_services/user.service';
-import { FollowService } from '../_services/follow.service';
-import { ImageService } from '../_services/image.service';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {Component, OnInit} from '@angular/core';
+import {ImageModel} from '../ImageModel';
+import {User} from '../user';
+import {TokenStorageService} from '../_services/token-storage.service';
+import {UserService} from '../_services/user.service';
+import {FollowService} from '../_services/follow.service';
+import {ImageService} from '../_services/image.service';
 
 @Component({
   selector: 'app-profile',
@@ -14,7 +14,8 @@ import { ImageService } from '../_services/image.service';
 })
 export class ProfileComponent implements OnInit {
   [x: string]: any;
-  //-------------- User --------------
+
+  // -------------- User --------------
   currentUser: any;
   currentUserData: User;
   currentUserId: number;
@@ -25,13 +26,13 @@ export class ProfileComponent implements OnInit {
   userNameForm = '';
   emailForm = '';
 
-  //-------------- FOLLOW --------------
+  // -------------- FOLLOW --------------
 
   followingCount: number;
   followersCount: number;
 
 
-  //-------------- IMAGES --------------
+  // -------------- IMAGES --------------
 
   descriptionFormTextArea = '';
   selectedFile: File;
@@ -45,14 +46,17 @@ export class ProfileComponent implements OnInit {
   profilePhoto: ImageModel;
   selectedImage: any;
 
-
+  followersList: User[];
+  followingList: User[];
+  currentImageId: number;
 
   constructor(private token: TokenStorageService,
-    private userService: UserService,
-    private http: HttpClient,
-    private followService: FollowService,
-    private imageService: ImageService
-  ) { }
+              private userService: UserService,
+              private http: HttpClient,
+              private followService: FollowService,
+              private imageService: ImageService
+  ) {
+  }
 
   public getCurrentUserF(): void {
     this.userService.getCurrentUser().subscribe(
@@ -80,6 +84,7 @@ export class ProfileComponent implements OnInit {
   refresh(): void {
     window.location.reload();
   }
+
   //  --------------------------------------- USER DATA -----------------------------------------------
 
   onOpenModal(user: User, mode: string): void {
@@ -105,7 +110,7 @@ export class ProfileComponent implements OnInit {
 
   onEditUserData(user: User): void {
     this.userService.editName(user, this.nameForm).subscribe(
-      (response: User) => {
+      () => {
         this.nameForm = '';
         this.refresh();
       },
@@ -115,7 +120,7 @@ export class ProfileComponent implements OnInit {
     );
 
     this.userService.editUserName(user, this.userNameForm).subscribe(
-      (response: User) => {
+      () => {
         this.userNameForm = '';
         this.reloadPage();
       },
@@ -125,7 +130,7 @@ export class ProfileComponent implements OnInit {
     );
 
     this.userService.editEmail(user, this.emailForm).subscribe(
-      (response: User) => {
+      () => {
         this.emailForm = '';
         this.reloadPage();
       },
@@ -138,8 +143,6 @@ export class ProfileComponent implements OnInit {
 
   //  --------------------------------------- FOLLOWERS -----------------------------------------------
 
-  followersList: User[];
-  followingList: User[];
 
   public getFollowers(): void {
     this.followService.getFollowers(this.currentUserId).subscribe(
@@ -196,29 +199,28 @@ export class ProfileComponent implements OnInit {
 
   //  --------------------------------------- IMAGES -----------------------------------------------
 
-  public onChangeDescription() {
+  public onChangeDescription(): void {
     console.log(this.currentImageId, this.descriptionFormTextArea);
     this.imageService.changeDescription(this.currentImageId, this.descriptionFormTextArea).subscribe();
     this.refresh();
   }
 
-  currentImageId: number;
+
   onOpenDescriptionModal(description: string, imageId: number): void {
     this.currentImageId = imageId;
     this.descriptionFormTextArea = description;
 
   }
 
-  public onFileChanged(event) {
-    //Select File
+  public onFileChanged(event): void {
     this.selectedFile = event.target.files[0];
   }
 
-  public onOpenViewImage(pictureId: number) {
+  public onOpenViewImage(pictureId: number): void {
     this.getImage(pictureId);
   }
 
-  public onDeleteImage(imageId: number) {
+  public onDeleteImage(imageId: number): void {
     this.imageService.deleteImage(imageId).subscribe(
       (response: void) => {
         console.log(response);
@@ -231,10 +233,10 @@ export class ProfileComponent implements OnInit {
   }
 
 
-  onUpload() {
+  onUpload(): void {
     const uploadImageData = new FormData();
     uploadImageData.append('imageFile', this.selectedFile, this.selectedFile.name);
-   
+
     this.imageService.uploadImage(this.currentUser.id, uploadImageData).subscribe(
       (response) => {
         console.log(response);
@@ -250,9 +252,9 @@ export class ProfileComponent implements OnInit {
     this.imageService.getAllImages(this.currentUser.id).subscribe(
       (response: ImageModel[]) => {
         this.allImagesResponse = response;
-        for (let i = 0; i < this.allImagesResponse.length; i++) {
-          this.allImagesResponse[i].picByte = 'data:image/jpeg;base64,' + this.allImagesResponse[i].picByte;
-        }
+        this.allImagesResponse.forEach(item => {
+          item.picByte = 'data:image/jpeg;base64,' + item.picByte;
+        });
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -260,23 +262,23 @@ export class ProfileComponent implements OnInit {
     );
   }
 
-  public getProfileImage() {
-    console.log(this.currentUser.id)
+  public getProfileImage(): void {
+    console.log(this.currentUser.id);
     this.imageService.getProfilePhoto(this.currentUser.id).subscribe(
-        (res: ImageModel) => {
-          this.profilePhoto = res;
-          this.profilePhoto.picByte = 'data:image/jpeg;base64,' + res.picByte;
-          // this.retrieveResonse = res;
-          // this.base64Data = this.retrieveResonse.picByte;
-          // this.retrievedImage = 'data:image/jpeg;base64,' + this.base64Data;
-          // this.selectedImage = this.retrievedImage;
-        }
-      );
+      (res: ImageModel) => {
+        this.profilePhoto = res;
+        this.profilePhoto.picByte = 'data:image/jpeg;base64,' + res.picByte;
+        // this.retrieveResonse = res;
+        // this.base64Data = this.retrieveResonse.picByte;
+        // this.retrievedImage = 'data:image/jpeg;base64,' + this.base64Data;
+        // this.selectedImage = this.retrievedImage;
+      }
+    );
   }
 
 
-  public getImage(imageId: number) {
-    //Make a call to Sprinf Boot to get the Image Bytes.
+  public getImage(imageId: number): void {
+    // Make a call to Sprinf Boot to get the Image Bytes.
     this.http.get('http://localhost:8080/image/get/' + imageId)
       .subscribe(
         res => {
