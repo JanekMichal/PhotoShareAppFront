@@ -17,7 +17,6 @@ import {authInterceptorProviders} from './_helpers/auth.interceptor';
 import {SearchComponent} from './search/search.component';
 import {ViewProfileComponent} from './view-profile/view-profile.component';
 import {ProfileEditorComponent} from './profile-editor/profile-editor.component';
-import {ProfilePhotoUploaderComponent} from './profile-photo-uploader/profile-photo-uploader.component';
 
 import {ImageCropperModule} from 'ngx-image-cropper';
 
@@ -34,8 +33,7 @@ import {ImageCropperModule} from 'ngx-image-cropper';
     BoardUserComponent,
     SearchComponent,
     ViewProfileComponent,
-    ProfileEditorComponent,
-    ProfilePhotoUploaderComponent
+    ProfileEditorComponent
   ],
   imports: [
     BrowserModule,

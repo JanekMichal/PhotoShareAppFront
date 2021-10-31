@@ -1,9 +1,104 @@
-<div class="container " id="main-container">
-  <div class="row align-items-center">
-    <div class="col">
+<div class="container">
+  <div class="row" style="margin-top: 5%;">
 
-      <label for="name">Name: </label>
-      <input id="name" type="text" [formControl]="name">
+    <div>
+      <h1 style="text-align: center;">Change profile photo:</h1><br>
+    </div>
+
+
+    <div class="text-center col-md-12">
+      <input type="file" (change)="fileChangeEvent($event)"/>
+    </div>
+  </div>
+  <div class="row" style="margin-top: 5%;">
+    <div class="text-center col-md-8">
+      <h5>Crop Image</h5>
+      <image-cropper
+        [imageChangedEvent]="imageChangedEvent"
+        [maintainAspectRatio]="true"
+        [aspectRatio]="4 / 4"
+        [resizeToWidth]="256"
+        format="jpeg"
+        (imageCropped)="imageCropped($event)"
+        (imageLoaded)="imageLoaded()"
+        (cropperReady)="cropperReady()"
+        (loadImageFailed)="loadImageFailed()"></image-cropper>
+    </div>
+    <div class="text-center col-md-4">
+      <h5>Preview</h5>
+      <img *ngIf="croppedImage !== null" [src]="croppedImage" alt="cropped image"/>
+    </div>
+  </div>
+  <div class="col-auto">
+    <input class="btn btn-outline-primary " type="button" (click)="onUpload()" value="Upload">
+  </div>
+
+    <div>
+      <h1 style="text-align: center;">Change profile data:</h1>
+    </div>
+
+    <div class="mb-3">
+      <label for="nameInput" class="form-label">Username: </label>
+      <input id="nameInput" type="text" class="form-control" [(ngModel)]="userNameForm">
+    </div>
+
+    <div class="mb-3">
+      <label for="emailInput" class="form-label">Email:</label>
+      <input id="emailInput" type="text" class="form-control" [(ngModel)]="emailForm">
+    </div>
+
+    <div class="mb-3">
+      <label for="userNameInput" class="form-label">Name: </label>
+      <input id="userNameInput" type="text" class="form-control" [(ngModel)]="nameForm">
+    </div>
+
+    <div>
+      <button class="btn btn-outline-primary" (click)="onEditUserData()">Confirm</button>
+    </div>
+
+
+    <div>
+      <h1 style="text-align: center;">Change profile data:</h1>
+    </div>
+    <div class="mb-3">
+      <label for="passwordInput" class="form-label">Password: </label>
+      <input id="passwordInput" type="password" class="form-control" [(ngModel)]="newPasswordForm">
+    </div>
+
+    <div class="mb-3">
+      <label for="confirmPasswordInput" class="form-label">Confirm password:</label>
+      <input id="confirmPasswordInput" type="password" class="form-control" [(ngModel)]="newPasswordConfirmForm">
+    </div>
+
+    <div>
+      <button class="btn btn-outline-primary" (click)="onPasswordChanged()">Change Password</button>
+    </div>
+
+
+
+  <button type="button"
+          class="btn btn-outline-danger" data-bs-toggle="modal"
+          data-bs-target="#deleteAccountModal">Delete Account
+  </button>
+
+  <!-- Delete User Modal -->
+  <div class="modal fade" id="deleteAccountModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">Do you want to delete Account?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-footer">
+          <button (click)="onDeleteAccount()" type="button" class="btn btn-outline-danger"
+                  data-bs-dismiss="modal">Confirm
+          </button>
+          <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Cancel</button>
+        </div>
+
+      </div>
     </div>
   </div>
 </div>

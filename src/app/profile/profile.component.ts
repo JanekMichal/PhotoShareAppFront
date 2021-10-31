@@ -22,22 +22,18 @@ export class ProfileComponent implements OnInit {
   currentUserId: number;
   currentUserData: User;
 
-
   editUser: User;
-
   nameForm = '';
   userNameForm = '';
   emailForm = '';
 
   // -------------- FOLLOW --------------
-
   followingCount: number;
   followersCount: number;
   followersList: User[];
   followingList: User[];
 
   // -------------- IMAGES --------------
-
   descriptionFormTextArea = '';
   selectedFile: File;
   retrievedImage: any;
@@ -84,65 +80,7 @@ export class ProfileComponent implements OnInit {
     window.location.reload();
   }
 
-  //  --------------------------------------- USER DATA -----------------------------------------------
-
-  onOpenModal(user: User, mode: string): void {
-    const container = document.getElementById('main-container');
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.style.display = 'none';
-    button.setAttribute('data-bs-toggle', 'modal');
-    if (mode === 'edit') {
-      this.editUser = this.currentUserData;
-      this.nameForm = this.editUser.name;
-      this.emailForm = this.editUser.email;
-      this.userNameForm = this.editUser.username;
-      button.setAttribute('data-bs-target', '#editUserModal');
-    }
-    if (mode === 'delete') {
-      this.deleteUser = user;
-      button.setAttribute('data-bs-target', '#deleteUserModal');
-    }
-    container.appendChild(button);
-    button.click();
-  }
-
-  onEditUserData(user: User): void {
-    this.userService.editName(user, this.nameForm).subscribe(
-      () => {
-        this.nameForm = '';
-        this.refresh();
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.message);
-      }
-    );
-
-    this.userService.editUserName(user, this.userNameForm).subscribe(
-      () => {
-        this.userNameForm = '';
-        this.reloadPage();
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.message);
-      }
-    );
-
-    this.userService.editEmail(user, this.emailForm).subscribe(
-      () => {
-        this.emailForm = '';
-        this.reloadPage();
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.message);
-      }
-    );
-  }
-
-
   //  --------------------------------------- FOLLOWERS -----------------------------------------------
-
-
   public getFollowers(): void {
     this.followService.getFollowers(this.currentUserId).subscribe(
       (response: User[]) => {
@@ -207,7 +145,6 @@ export class ProfileComponent implements OnInit {
   onOpenDescriptionModal(description: string, imageId: number): void {
     this.currentImageId = imageId;
     this.descriptionFormTextArea = description;
-
   }
 
   public onFileChanged(event): void {

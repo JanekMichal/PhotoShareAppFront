@@ -19,9 +19,7 @@
         {{ currentUserData?.name }}
       </p> -->
 
-      <!-- <i  routerLink="profile-editor" type="button" class="btn btn-outline-primary">Edit profile</i><br> -->
-
-      <i (click)="onOpenModal(currentUser, 'edit')"  class="btn btn-outline-primary">Edit profile</i><br>
+      <i routerLink="profile-editor" class="btn btn-outline-primary">Edit profile</i><br>
       <br>
     </div>
     <div class="col">
@@ -39,7 +37,7 @@
         <strong>Following: </strong>
         {{ followingCount }}
       </h4>
-      <i  class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#followingModal">Show
+      <i class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#followingModal">Show
         following</i><br>
       <br>
     </div>
@@ -219,49 +217,6 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- EDIT MODAL -->
-<div class="modal fade" id="editUserModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Edit User</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-
-        <div class="mb-3">
-          <label for="nameInput" class="form-label">Name</label>
-          <input id="nameInput" type="text" [(ngModel)]="nameForm">
-        </div>
-
-        <div class="mb-3">
-          <label for="userNameInput" class="form-label">User name</label>
-          <input id="userNameInput" type="text" [(ngModel)]="userNameForm">
-        </div>
-
-        <div class="mb-3">
-          <label for="emailInput" class="form-label">Email</label>
-          <input id="emailInput" type="text" [(ngModel)]="emailForm">
-        </div>
-
-        <!-- <div class="alert alert-danger"
-          role="alert"
-          *ngIf="editUser.name === ''">
-            Username is required!
-          </div> -->
-
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button (click)="onEditUserData(editUser)" data-bs-dismiss="modal" type="button" class="btn btn-primary">Save
-            changes
-          </button>
-        </div>
       </div>
     </div>
   </div>

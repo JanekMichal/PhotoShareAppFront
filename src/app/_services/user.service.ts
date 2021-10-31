@@ -1,10 +1,13 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {User} from '../user';
 import {TokenStorageService} from './token-storage.service';
 
 const API_URL = 'http://localhost:8080/api/test/';
+const httpOptions = {
+  headers: new HttpHeaders({'Content-Type': 'application/json'})
+};
 
 @Injectable({
   providedIn: 'root'
@@ -51,7 +54,23 @@ export class UserService {
   }
 
   deleteUser(userId: number): Observable<void> {
-    return this.http.delete<void>(API_URL + 'admin/delete/id/' + userId);
+    return this.http.delete<void>(API_URL + 'delete_user/' + userId);
+  }
+
+  changePassword(userId: number, newPassword: string): Observable<any> {
+    return this.http.patch<any>(API_URL + 'change_user_password/' + userId, {
+      password: newPassword
+    }, httpOptions
+    );
+  }
+
+  updateUserData(user: User): Observable<any> {
+    return this.http.patch<any>(API_URL + 'update_user_data/' + user.id, {
+        username: user.username,
+        email: user.email,
+        name: user.name
+      }, httpOptions
+    );
   }
 
   editName(user: User, editUserNameStr: string): Observable<User> {
