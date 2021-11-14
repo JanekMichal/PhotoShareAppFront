@@ -8,7 +8,7 @@ import {DataService} from './_services/data.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  private roles: string[];
+  private role: string;
   isLoggedIn = false;
   showAdminBoard = false;
   showModeratorBoard = false;
@@ -30,11 +30,11 @@ export class AppComponent implements OnInit {
 
     if (this.isLoggedIn) {
       const user = this.tokenStorageService.getUser();
-      this.roles = user.roles;
+      this.role = user.role;
       this.email = user.email;
       this.id = user.id;
-      this.showAdminBoard = this.roles.includes('ROLE_ADMIN');
-      this.showModeratorBoard = this.roles.includes('ROLE_MODERATOR');
+      this.showAdminBoard = this.role === 'ROLE_ADMIN';
+      this.showModeratorBoard = this.role === 'ROLE_MODERATOR';
 
       this.name = user.name;
       this.username = user.username;

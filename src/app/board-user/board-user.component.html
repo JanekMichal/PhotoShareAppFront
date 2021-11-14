@@ -11,7 +11,9 @@
         <img [src]="picture.picByte" class="card-img-top" alt="Picture on the main page">
         <div class="card-body">
           <p class="card-text">{{ picture.description }} </p>
-          <button class="btn"><i class="bi bi-heart"></i></button>
+          <button *ngIf="picture.isLiked" (click)="deleteLike(picture)" class="btn"><i class="bi bi-heart-fill"></i></button>
+          <button *ngIf="picture.isLiked == false" (click)="likeImage(picture)" class="btn"><i class="bi bi-heart"></i></button>
+          {{ picture.likesCount }}
           <button class="btn" (click)="commentsButtonClick(picture?.id)"><i class="bi bi-chat"></i></button>
           {{ picture.commentsCount }}
           <button class="btn"><i class="bi bi-share"></i></button>
@@ -38,8 +40,7 @@
           <div class="input-group mb-3" id="commentInputBar">
 
             <button (click)="addComment(currentUserId, picture.id, description)" class="btn btn-outline-secondary"
-                    type="button" id="button-addComment">Add
-              Comment!
+                    type="button" id="button-addComment">Add Comment!
             </button>
             <input [(ngModel)]="description" type="text" class="form-control" placeholder="">
           </div>

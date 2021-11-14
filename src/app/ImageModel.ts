@@ -6,4 +6,7 @@ export interface ImageModel {
   picByte: any;
   description: string;
   commentsCount: number;
+  likesCount: number;
+  isLiked: boolean;
+  index: number;
 }

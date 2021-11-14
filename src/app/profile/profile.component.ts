@@ -23,9 +23,7 @@ export class ProfileComponent implements OnInit {
   currentUserData: User;
 
   editUser: User;
-  nameForm = '';
-  userNameForm = '';
-  emailForm = '';
+
 
   // -------------- FOLLOW --------------
   followingCount: number;
@@ -43,6 +41,10 @@ export class ProfileComponent implements OnInit {
   allImagesResponse: ImageModel[];
   selectedImage: any;
   currentImageId: number;
+
+  acceptableFileTypes = ['image/jpeg', 'image.png'];
+  isImageValid = false;
+  maxImageSize = 100000; // 5MB
 
   constructor(private token: TokenStorageService,
               private userService: UserService,
@@ -64,8 +66,10 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.currentUser = this.token.getUser();
     this.currentUserId = this.currentUser.id;
+
     this.getCurrentUserF();
     this.getProfileImage();
     this.getAllImages();
@@ -147,8 +151,34 @@ export class ProfileComponent implements OnInit {
     this.descriptionFormTextArea = description;
   }
 
+  public createFileUploadErrorChild(message: string): HTMLParagraphElement {
+    const fileStatusParagraph = document.createElement('p');
+    fileStatusParagraph.textContent = message;
+    fileStatusParagraph.style.color = 'red';
+    fileStatusParagraph.style.marginTop = '1rem';
+    return fileStatusParagraph;
+  }
+
   public onFileChanged(event): void {
     this.selectedFile = event.target.files[0];
+
+    const preview = document.querySelector('#selectedFileStatus');
+    while (preview.firstChild) {
+      preview.removeChild(preview.firstChild);
+    }
+
+    if (this.selectedFile !== null) {
+      this.isImageValid = true;
+      if (!this.acceptableFileTypes.includes(this.selectedFile.type)) {
+        preview.appendChild(this.createFileUploadErrorChild('Wrong file type. Only JPG, JPEG and PNG files are accepted.'));
+        this.isImageValid = false;
+      }
+
+      if (this.selectedFile.size > this.maxImageSize) {
+        preview.appendChild(this.createFileUploadErrorChild('Image is too big. Maximum size is 5MB.'));
+        this.isImageValid = false;
+      }
+    }
   }
 
   public onOpenViewImage(pictureId: number): void {
@@ -168,18 +198,19 @@ export class ProfileComponent implements OnInit {
 
 
   onUpload(): void {
-    const uploadImageData = new FormData();
-    uploadImageData.append('imageFile', this.selectedFile, this.selectedFile.name);
+    if (this.isImageValid) {
+      const uploadImageData = new FormData();
+      uploadImageData.append('imageFile', this.selectedFile, this.selectedFile.name);
 
-    this.imageService.uploadImage(this.currentUser.id, uploadImageData).subscribe(
-      (response) => {
-        console.log(response);
-        this.refresh();
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.message);
-      }
-    );
+      this.imageService.uploadImage(uploadImageData).subscribe(
+        () => {
+          this.refresh();
+        },
+        (error: HttpErrorResponse) => {
+          alert(error.message);
+        }
+      );
+    }
   }
 
   public getAllImages(): void {
@@ -197,7 +228,7 @@ export class ProfileComponent implements OnInit {
   }
 
   public getProfileImage(): void {
-    this.imageService.getProfilePhoto(this.currentUser.id).subscribe(
+    this.imageService.getProfileImage(this.currentUser.id).subscribe(
       (res: ImageModel) => {
         this.profilePhoto = res;
         this.profilePhoto.picByte = 'data:image/jpeg;base64,' + res.picByte;

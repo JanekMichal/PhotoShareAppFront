@@ -1,4 +1,4 @@
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {ImageModel} from '../ImageModel';
@@ -15,7 +15,7 @@ export class ImageService {
 
 
   public addComment(userId: number, imageId: number, description: string): Observable<any> {
-    return this.http.post<string>(API_URL + 'comment/add_comment/' + imageId + '/' + userId, description);
+    return this.http.post<string>(API_URL + 'comment/add_comment/' + imageId, description);
   }
 
   public deleteComment(commentId: number): Observable<any> {
@@ -35,23 +35,23 @@ export class ImageService {
       API_URL + 'comment/get_comments_paged/' + imageId + '/' + pageNumber);
   }
 
-  public getFeedImages(userId: number): Observable<ImageModel[]> {
-    return this.http.get<ImageModel[]>(API_URL + 'image/get_feed_images/' + userId);
+  public getFeedImages(): Observable<ImageModel[]> {
+    return this.http.get<ImageModel[]>(API_URL + 'image/get_feed_images');
   }
 
   public changeDescription(imageId: number, description: string): Observable<ImageModel> {
     return this.http.patch<ImageModel>(API_URL + 'image/change_description/' + imageId, description);
   }
 
-  public uploadImage(userId: number, uploadImageData: FormData): Observable<any> {
-    return this.http.post(API_URL + 'image/upload_image/' + userId, uploadImageData);
+  public uploadImage(uploadImageData: FormData): Observable<any> {
+    return this.http.post(API_URL + 'image/upload_image', uploadImageData);
   }
 
-  public uploadProfileImage(userId: number, uploadImageData: FormData): Observable<any> {
-    return this.http.post(API_URL + 'image/upload_profile_image/' + userId, uploadImageData);
+  public uploadProfileImage(uploadImageData: FormData): Observable<any> {
+    return this.http.post(API_URL + 'image/upload_profile_image', uploadImageData);
   }
 
-  public getProfilePhoto(userId: number): Observable<ImageModel> {
+  public getProfileImage(userId: number): Observable<ImageModel> {
     return this.http.get<ImageModel>(API_URL + 'image/get_profile_image/' + userId);
   }
 

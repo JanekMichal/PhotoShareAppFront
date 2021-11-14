@@ -8,7 +8,14 @@
           <strong>{{ currentUser?.username }}</strong> Profile
         </h3>
       </header>
-      <img [src]="profilePhoto.picByte" class="rounded-circle" alt="profile photo">
+      <div *ngIf="profilePhoto.picByte !== null">
+      <img  [src]="profilePhoto.picByte" class="rounded-circle" alt="profile photo">
+      </div>
+      <div *ngIf="profilePhoto.picByte === null">
+        <img src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
+             class="profile-img-card"
+             alt="empty avatar image" />
+      </div>
       <br>
       <!-- <p>
         <strong>Email:</strong>
@@ -56,7 +63,10 @@
   </div>
   <div class="row g-3">
     <div class="col-auto">
-      <input class="form-control" type="file" (change)="onFileChanged($event)">
+      <input class="form-control" type="file" (change)="onFileChanged($event)" accept=".jpg, .jpeg, .png">
+      <div id="selectedFileStatus">
+
+      </div>
     </div>
     <div class="col-auto">
       <input class="btn btn-outline-primary" type="button" (click)="onUpload()" value="Upload">

@@ -77,7 +77,7 @@ export class ProfileEditorComponent implements OnInit {
     uploadImageData.append('imageFile', this.croppedImageToFile, this.selectedFile.name);
     console.log(this.currentUser.id);
 
-    this.imageService.uploadProfileImage(this.currentUser.id, uploadImageData)
+    this.imageService.uploadProfileImage(uploadImageData)
       .subscribe(
         (response) => {
           console.log(response);
