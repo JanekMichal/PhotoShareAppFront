@@ -8,10 +8,10 @@
           <strong>{{ currentUser?.username }}</strong> Profile
         </h3>
       </header>
-      <div *ngIf="profilePhoto.picByte !== null">
-      <img  [src]="profilePhoto.picByte" class="rounded-circle" alt="profile photo">
+      <div *ngIf="profilePhoto?.picByte != null">
+      <img  [src]="profilePhoto?.picByte" class="rounded-circle" alt="profile photo">
       </div>
-      <div *ngIf="profilePhoto.picByte === null">
+      <div *ngIf="profilePhoto?.picByte == null">
         <img src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
              class="profile-img-card"
              alt="empty avatar image" />

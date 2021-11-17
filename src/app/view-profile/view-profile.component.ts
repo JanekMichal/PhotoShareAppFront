@@ -16,9 +16,8 @@ import {ImageService} from '../_services/image.service';
 export class ViewProfileComponent implements OnInit {
   [x: string]: any;
 
-  currentUser: any;
-  currentUserId: number;
-  editUser: User;
+  currentUser: User;
+
   selectedFile: File;
   retrievedImage: any;
   retrieveResponse: any;
@@ -36,6 +35,8 @@ export class ViewProfileComponent implements OnInit {
   followersCount: number;
   followingCount: number;
 
+  profilePhoto: ImageModel;
+
   constructor(private token: TokenStorageService,
               private userService: UserService,
               private http: HttpClient,
@@ -45,7 +46,7 @@ export class ViewProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.currentUserId = this.token.getUser().id;
+    this.currentUser = this.token.getUser();
     this.data.searchedUserId.subscribe(message => this.searchedUserId = message);
     this.getUserData();
     this.isFollowing();
@@ -55,12 +56,25 @@ export class ViewProfileComponent implements OnInit {
     this.getFollowersCount();
     this.getFollowingCount();
 
+
+    this.getProfileImage();
   }
 
   public getUserData(): void {
     this.userService.getUser(this.searchedUserId).subscribe(
       (response: User) => {
         this.searchedUserData = response;
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
+  }
+
+  onDeleteAccount(): void {
+    this.userService.deleteUser(this.searchedUserId).subscribe(
+      () => {
+
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -82,7 +96,6 @@ export class ViewProfileComponent implements OnInit {
     );
   }
 
-
   public getFollowing(): void {
     this.followService.getFollowing(this.searchedUserId).subscribe(
       (response: User[]) => {
@@ -94,9 +107,8 @@ export class ViewProfileComponent implements OnInit {
     );
   }
 
-
   isFollowing(): void {
-    this.followService.ifFollowing(this.currentUserId, this.searchedUserId).subscribe(
+    this.followService.ifFollowing(this.currentUser.id, this.searchedUserId).subscribe(
       (response: boolean) => {
         if (response === true) {
           this.isCurrentUserFollowingSearchedUser = true;
@@ -110,10 +122,10 @@ export class ViewProfileComponent implements OnInit {
   public onFollow(): void {
     if (this.isCurrentUserFollowingSearchedUser) {
       this.isCurrentUserFollowingSearchedUser = false;
-      this.followService.unfollow(this.currentUserId, this.searchedUserId).subscribe();
+      this.followService.unfollow(this.currentUser.id, this.searchedUserId).subscribe();
     } else {
       this.isCurrentUserFollowingSearchedUser = true;
-      this.followService.follow(this.currentUserId, this.searchedUserId).subscribe();
+      this.followService.follow(this.currentUser.id, this.searchedUserId).subscribe();
     }
   }
 
@@ -156,6 +168,31 @@ export class ViewProfileComponent implements OnInit {
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
+      }
+    );
+  }
+
+  public getProfileImage(): void {
+    this.imageService.getProfileImage(this.searchedUserId).subscribe(
+      (res: ImageModel) => {
+        this.profilePhoto = res;
+        this.profilePhoto.picByte = 'data:image/jpeg;base64,' + res.picByte;
+      }
+    );
+  }
+
+  // refresh(): void {
+  //   window.location.reload();
+  // }
+
+  public onDeleteImage(image: ImageModel): void {
+    this.imageService.deleteSomeoneImage(image.id).subscribe(
+      () => {
+        const index = this.allImagesResponse.indexOf(image);
+        if (index > -1) {
+          this.allImagesResponse.splice(index, 1);
+        }
+        // this.refresh();
       }
     );
   }

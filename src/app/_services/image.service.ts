@@ -2,9 +2,8 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {ImageModel} from '../ImageModel';
-import {CommentModel} from '../CommentModel';
 
-const API_URL = 'http://localhost:8080/';
+const API_URL = 'http://localhost:8080/image/';
 
 @Injectable({
   providedIn: 'root'
@@ -13,57 +12,39 @@ export class ImageService {
   constructor(private http: HttpClient) {
   }
 
-
-  public addComment(userId: number, imageId: number, description: string): Observable<any> {
-    return this.http.post<string>(API_URL + 'comment/add_comment/' + imageId, description);
-  }
-
-  public deleteComment(commentId: number): Observable<any> {
-    return this.http.delete<any>(API_URL + 'comment/delete_comment/' + commentId);
-  }
-
-  public getCommentsCount(imageId: number): Observable<number> {
-    return this.http.get<number>(API_URL + 'comment/comments_count/' + imageId);
-  }
-
-  public getComments(imageId: number): Observable<CommentModel[]> {
-    return this.http.get<CommentModel[]>(API_URL + 'comment/get_comments/' + imageId);
-  }
-
-  public getCommentsPaged(imageId: number, pageNumber: number): Observable<CommentModel[]> {
-    return this.http.get<CommentModel[]>(
-      API_URL + 'comment/get_comments_paged/' + imageId + '/' + pageNumber);
-  }
-
   public getFeedImages(): Observable<ImageModel[]> {
-    return this.http.get<ImageModel[]>(API_URL + 'image/get_feed_images');
+    return this.http.get<ImageModel[]>(API_URL + 'get_feed_images');
   }
 
   public changeDescription(imageId: number, description: string): Observable<ImageModel> {
-    return this.http.patch<ImageModel>(API_URL + 'image/change_description/' + imageId, description);
+    return this.http.patch<ImageModel>(API_URL + 'change_description/' + imageId, description);
   }
 
   public uploadImage(uploadImageData: FormData): Observable<any> {
-    return this.http.post(API_URL + 'image/upload_image', uploadImageData);
+    return this.http.post(API_URL + 'upload_image', uploadImageData);
   }
 
   public uploadProfileImage(uploadImageData: FormData): Observable<any> {
-    return this.http.post(API_URL + 'image/upload_profile_image', uploadImageData);
+    return this.http.post(API_URL + 'upload_profile_image', uploadImageData);
   }
 
   public getProfileImage(userId: number): Observable<ImageModel> {
-    return this.http.get<ImageModel>(API_URL + 'image/get_profile_image/' + userId);
+    return this.http.get<ImageModel>(API_URL + 'get_profile_image/' + userId);
   }
 
   public getAllImages(userId: number): Observable<ImageModel[]> {
-    return this.http.get<ImageModel[]>(API_URL + 'image/get/all_images/' + userId);
+    return this.http.get<ImageModel[]>(API_URL + 'get/all_images/' + userId);
   }
 
-  public deleteImage(imageId: number): Observable<any> {
-    return this.http.delete<void>(API_URL + 'image/delete/' + imageId);
+  public deleteOwnImage(imageId: number): Observable<any> {
+    return this.http.delete<void>(API_URL + 'delete_own_image/' + imageId);
+  }
+
+  public deleteSomeoneImage(imageId: number): Observable<any> {
+    return this.http.delete<void>(API_URL + 'delete_someone_image/' + imageId);
   }
 
   public getImage(imageId: number): Observable<ImageModel> {
-    return this.http.get<ImageModel>(API_URL + 'image/get/' + imageId);
+    return this.http.get<ImageModel>(API_URL + 'get/' + imageId);
   }
 }

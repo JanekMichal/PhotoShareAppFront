@@ -15,7 +15,9 @@
       <td>{{ user?.name }}</td>
       <td>
         <div class="btn-group" role="group">
-          <button (click)="onViewUserProfile(user?.id)" routerLink="view-profile" type="button"
+          <button *ngIf="currentUser.id == user?.id" routerLink="profile" type="button" class="btn btn-outline-primary">View
+            profile</button>
+          <button *ngIf="currentUser.id != user?.id" (click)="onViewUserProfile(user?.id)" routerLink="view-profile" type="button"
                   class="btn btn-outline-primary">View
             profile
           </button>

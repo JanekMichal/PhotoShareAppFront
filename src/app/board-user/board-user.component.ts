@@ -8,6 +8,7 @@ import {DataService} from '../_services/data.service';
 import {CommentModel} from '../CommentModel';
 import {ImageService} from '../_services/image.service';
 import {LikeService} from '../_services/like.service';
+import {CommentService} from '../_services/comment.service';
 
 @Component({
   selector: 'app-board-user',
@@ -37,7 +38,9 @@ export class BoardUserComponent implements OnInit {
               private http: HttpClient,
               private data: DataService,
               private imageService: ImageService,
-              private likeService: LikeService) {
+              private likeService: LikeService,
+              private commentService: CommentService
+  ) {
   }
 
   ngOnInit(): void {
@@ -47,7 +50,7 @@ export class BoardUserComponent implements OnInit {
   }
 
   public getCommentsCount(imageId: number): number {
-    this.imageService.getCommentsCount(imageId).subscribe(
+    this.commentService.getCommentsCount(imageId).subscribe(
       (response: number) => {
         this.commentsCount = response;
         console.log('Response: ' + this.commentsCount);
@@ -57,7 +60,7 @@ export class BoardUserComponent implements OnInit {
   }
 
   public addComment(userId: number, imageId: number, description: string): void {
-    this.imageService.addComment(userId, imageId, description).subscribe(
+    this.commentService.addComment(userId, imageId, description).subscribe(
       (response: number) => {
         this.commentsCount = response;
         this.getComments(imageId);
@@ -68,7 +71,7 @@ export class BoardUserComponent implements OnInit {
   }
 
   public deleteComment(commentId: number, imageId: number): void {
-    this.imageService.deleteComment(commentId).subscribe(
+    this.commentService.deleteComment(commentId).subscribe(
       () => this.getComments(imageId)
     );
   }
@@ -102,7 +105,7 @@ export class BoardUserComponent implements OnInit {
     if (this.imageWithLoadedCommentsId !== imageId) {
       this.commentsPageNumber = 0;
     }
-    this.imageService.getCommentsPaged(imageId, this.commentsPageNumber).subscribe(
+    this.commentService.getCommentsPaged(imageId, this.commentsPageNumber).subscribe(
       (response: CommentModel[]) => {
         if (this.imageWithLoadedCommentsId !== imageId) {
           this.imageWithLoadedCommentsId = imageId;
@@ -120,7 +123,7 @@ export class BoardUserComponent implements OnInit {
             }
           );
         });
-        this.imageService.getCommentsCount(imageId).subscribe(
+        this.commentService.getCommentsCount(imageId).subscribe(
           (commentsCountResponse: number) => {
             this.commentsCount = commentsCountResponse;
             if (this.commentsLoadedCount === this.commentsCount) {
@@ -139,14 +142,14 @@ export class BoardUserComponent implements OnInit {
   }
 
   public getComments(imageId: number): void {
-    this.imageService.getComments(imageId).subscribe(
+    this.commentService.getComments(imageId).subscribe(
       (response: CommentModel[]) => {
         this.comments = response;
         for (let i = 0; i < this.comments.length; i++) {
           this.userService.getUser(this.comments[i].ownerId).subscribe(
             (userResponse: User) => {
               this.comments[i].authorName = userResponse.username;
-              this.imageService.getCommentsCount(this.allImagesResponse[i].id).subscribe(
+              this.commentService.getCommentsCount(this.allImagesResponse[i].id).subscribe(
                 (commentsCountResponse: number) => {
                   this.allImagesResponse[i].commentsCount = commentsCountResponse;
                 }
@@ -174,7 +177,7 @@ export class BoardUserComponent implements OnInit {
               item.name = userResponse.username;
             }
           );
-          this.imageService.getCommentsCount(item.id).subscribe(
+          this.commentService.getCommentsCount(item.id).subscribe(
             (commentsCountResponse: number) => {
               item.commentsCount = commentsCountResponse;
             }

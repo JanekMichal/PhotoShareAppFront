@@ -44,7 +44,7 @@ export class ProfileComponent implements OnInit {
 
   acceptableFileTypes = ['image/jpeg', 'image.png'];
   isImageValid = false;
-  maxImageSize = 100000; // 5MB
+  maxImageSize = 5242880; // 5MB
 
   constructor(private token: TokenStorageService,
               private userService: UserService,
@@ -71,8 +71,9 @@ export class ProfileComponent implements OnInit {
     this.currentUserId = this.currentUser.id;
 
     this.getCurrentUserF();
-    this.getProfileImage();
     this.getAllImages();
+    this.getProfileImage();
+
 
     this.getFollowingCount();
     this.getFollowersCount();
@@ -186,7 +187,7 @@ export class ProfileComponent implements OnInit {
   }
 
   public onDeleteImage(imageId: number): void {
-    this.imageService.deleteImage(imageId).subscribe(
+    this.imageService.deleteOwnImage(imageId).subscribe(
       () => {
         this.refresh();
       },
@@ -231,7 +232,10 @@ export class ProfileComponent implements OnInit {
     this.imageService.getProfileImage(this.currentUser.id).subscribe(
       (res: ImageModel) => {
         this.profilePhoto = res;
-        this.profilePhoto.picByte = 'data:image/jpeg;base64,' + res.picByte;
+        this.profilePhoto.picByte = 'data:image/jpeg;base64,' + this.profilePhoto.picByte;
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
       }
     );
   }

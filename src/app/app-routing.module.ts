@@ -23,6 +23,7 @@ const routes: Routes = [
   {path: 'admin', component: BoardAdminComponent},
   {path: 'search', component: SearchComponent},
   {path: 'search/view-profile', component: ViewProfileComponent},
+  {path: 'search/profile', component: ProfileComponent},
   {path: 'user/view-profile', component: ViewProfileComponent},
   {path: 'profile/profile-editor', component: ProfileEditorComponent},
   {path: '', redirectTo: 'home', pathMatch: 'full'}

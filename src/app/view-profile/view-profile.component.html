@@ -6,16 +6,58 @@
           <strong>{{ searchedUserData?.username }}</strong> Profile
         </h3>
       </header>
+
       <p>
         <strong>Name:</strong>
         {{ searchedUserData?.name }}
       </p>
-      <button type="button" class="btn btn-outline-primary" (click)="onFollow()"
-              *ngIf="isCurrentUserFollowingSearchedUser">Unfollow
+      <div *ngIf="searchedUserId != currentUser.id">
+        <button type="button" class="btn btn-outline-primary" (click)="onFollow()"
+                *ngIf="isCurrentUserFollowingSearchedUser">Unfollow
+        </button>
+        <button type="button" class="btn btn-outline-primary" (click)="onFollow()"
+                *ngIf="!isCurrentUserFollowingSearchedUser">Follow
+        </button>
+      </div>
+
+      <div *ngIf="profilePhoto?.picByte != null">
+        <img [src]="profilePhoto?.picByte" class="rounded-circle" alt="profile photo">
+      </div>
+      <div *ngIf="profilePhoto?.picByte == null">
+        <img src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
+             class="profile-img-card"
+             alt="empty avatar image"/>
+      </div>
+
+      <button *ngIf="currentUser.role == 'ROLE_ADMIN' || currentUser.role == 'ROLE_MODERATOR' && searchedUserId != currentUser.id" type="button"
+              class="btn btn-outline-danger" data-bs-toggle="modal"
+              data-bs-target="#deleteAccountModal">Delete Account
       </button>
-      <button type="button" class="btn btn-outline-primary" (click)="onFollow()"
-              *ngIf="!isCurrentUserFollowingSearchedUser">Follow
-      </button>
+
+      <!-- Delete User Modal -->
+      <div class="modal fade" id="deleteAccountModal">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+
+            <div class="modal-header">
+              <h5 class="modal-title">Do you want to delete Account?</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-footer">
+              <button (click)="onDeleteAccount()" type="button" class="btn btn-outline-danger"
+                      data-bs-dismiss="modal">Confirm
+              </button>
+              <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Cancel</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+      <br>
+
     </div>
 
     <div class="col">
@@ -54,6 +96,10 @@
                   <div class="btn-group">
                     <button (click)="onOpenViewImage(picture.id)" type="button" class="btn btn-sm btn-outline-secondary"
                             data-bs-toggle="modal" data-bs-target="#imageModal">View
+                    </button>
+
+                    <button (click)="onDeleteImage(picture)" type="button"
+                            class="btn btn-sm btn-outline-secondary">Delete
                     </button>
                   </div>
                 </div>
