@@ -29,12 +29,12 @@
              alt="empty avatar image"/>
       </div>
 
-      <button *ngIf="currentUser.role == 'ROLE_ADMIN' || currentUser.role == 'ROLE_MODERATOR' && searchedUserId != currentUser.id" type="button"
+      <button *ngIf="currentUser.role == 'ADMIN' || currentUser.role == 'MODERATOR' && searchedUserId != currentUser.id" type="button"
               class="btn btn-outline-danger" data-bs-toggle="modal"
               data-bs-target="#deleteAccountModal">Delete Account
       </button>
 
-      <button *ngIf="currentUser.role == 'ROLE_ADMIN' && searchedUserId != currentUser.id" type="button"
+      <button *ngIf="currentUser.role == 'ADMIN' && searchedUserId != currentUser.id" type="button"
               class="btn btn-outline-danger" data-bs-toggle="modal"
               data-bs-target="#changeRoleModal">Change role
       </button>

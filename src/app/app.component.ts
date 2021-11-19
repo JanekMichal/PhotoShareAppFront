@@ -33,8 +33,8 @@ export class AppComponent implements OnInit {
       this.role = user.role;
       this.email = user.email;
       this.id = user.id;
-      this.showAdminBoard = this.role === 'ROLE_ADMIN';
-      this.showModeratorBoard = this.role === 'ROLE_MODERATOR';
+      this.showAdminBoard = this.role === 'ADMIN';
+      this.showModeratorBoard = this.role === 'MODERATOR';
 
       this.name = user.name;
       this.username = user.username;
