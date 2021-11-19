@@ -34,6 +34,11 @@
               data-bs-target="#deleteAccountModal">Delete Account
       </button>
 
+      <button *ngIf="currentUser.role == 'ROLE_ADMIN' && searchedUserId != currentUser.id" type="button"
+              class="btn btn-outline-danger" data-bs-toggle="modal"
+              data-bs-target="#changeRoleModal">Change role
+      </button>
+
       <!-- Delete User Modal -->
       <div class="modal fade" id="deleteAccountModal">
         <div class="modal-dialog modal-dialog-centered">
@@ -54,6 +59,35 @@
           </div>
         </div>
       </div>
+
+      <!-- Confirm changing user role to moderator -->
+      <div class="modal fade" id="changeRoleModal">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+
+            <div class="modal-header">
+              <h5 class="modal-title">Do you want to change user role?</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-footer">
+              <button (click)="giveRole('admin')" type="button" class="btn btn-outline-danger"
+                      data-bs-dismiss="modal">Admin
+              </button>
+              <button (click)="giveRole('moderator')" type="button" class="btn btn-outline-danger"
+                      data-bs-dismiss="modal">Moderator
+              </button>
+              <button (click)="giveRole('user')" type="button" class="btn btn-outline-danger"
+                      data-bs-dismiss="modal">User
+              </button>
+              <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Cancel</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
 
 
       <br>

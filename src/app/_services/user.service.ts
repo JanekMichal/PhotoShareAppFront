@@ -51,8 +51,8 @@ export class UserService {
 
   changePassword(userId: number, newPassword: string): Observable<any> {
     return this.http.patch<any>(API_URL + 'change_user_password/' + userId, {
-      password: newPassword
-    }, httpOptions
+        password: newPassword
+      }, httpOptions
     );
   }
 
@@ -75,5 +75,17 @@ export class UserService {
 
   editEmail(user: User, editEmailStr: string): Observable<User> {
     return this.http.patch<User>(API_URL + 'profile/' + user.id + '/email/' + editEmailStr, user);
+  }
+
+  giveRole(userId: number, role: string): Observable<User> {
+    if (role === 'admin') {
+      return this.http.patch<User>(API_URL + 'give_admin_role/' + userId, null);
+    } else if (role === 'admin') {
+      return this.http.patch<User>(API_URL + 'give_moderator_role/' + userId, null);
+    } else if (role === 'user') {
+      return this.http.patch<User>(API_URL + 'give_user_role/' + userId, null);
+    } else {
+      console.log('Wrong role name!');
+    }
   }
 }

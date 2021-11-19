@@ -192,6 +192,14 @@ export class ViewProfileComponent implements OnInit {
     );
   }
 
+  public giveRole(role: string): void {
+    this.userService.giveRole(this.searchedUserId, role).subscribe(
+      (response: User) => {
+        console.log(response);
+      }
+    );
+  }
+
   public getImage(imageId: number): void {
     this.imageService.getImage(imageId).subscribe(
       res => {
