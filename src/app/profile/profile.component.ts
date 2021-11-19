@@ -186,10 +186,13 @@ export class ProfileComponent implements OnInit {
     this.getImage(pictureId);
   }
 
-  public onDeleteImage(imageId: number): void {
-    this.imageService.deleteOwnImage(imageId).subscribe(
+  public onDeleteImage(image: ImageModel): void {
+    this.imageService.deleteOwnImage(image.id).subscribe(
       () => {
-        this.refresh();
+        const index = this.allImagesResponse.indexOf(image);
+        if (index > -1) {
+          this.allImagesResponse.splice(index, 1);
+        }
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -204,8 +207,10 @@ export class ProfileComponent implements OnInit {
       uploadImageData.append('imageFile', this.selectedFile, this.selectedFile.name);
 
       this.imageService.uploadImage(uploadImageData).subscribe(
-        () => {
-          this.refresh();
+        (response: ImageModel) => {
+          console.log(response);
+          response.picByte = 'data:image/jpeg;base64,' + response.picByte;
+          this.allImagesResponse.unshift(response);
         },
         (error: HttpErrorResponse) => {
           alert(error.message);

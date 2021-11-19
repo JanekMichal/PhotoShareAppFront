@@ -19,14 +19,6 @@ export class UserService {
   constructor(private http: HttpClient, private token: TokenStorageService) {
   }
 
-  getPublicContent(): Observable<any> {
-    return this.http.get(API_URL + 'all', {responseType: 'text'});
-  }
-
-  getUserBoard(): Observable<any> {
-    return this.http.get(API_URL + 'user', {responseType: 'text'});
-  }
-
   getModeratorBoard(): Observable<any> {
     return this.http.get(API_URL + 'mod', {responseType: 'text'});
   }

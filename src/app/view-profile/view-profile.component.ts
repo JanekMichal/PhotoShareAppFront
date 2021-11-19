@@ -181,10 +181,6 @@ export class ViewProfileComponent implements OnInit {
     );
   }
 
-  // refresh(): void {
-  //   window.location.reload();
-  // }
-
   public onDeleteImage(image: ImageModel): void {
     this.imageService.deleteSomeoneImage(image.id).subscribe(
       () => {
@@ -192,7 +188,6 @@ export class ViewProfileComponent implements OnInit {
         if (index > -1) {
           this.allImagesResponse.splice(index, 1);
         }
-        // this.refresh();
       }
     );
   }

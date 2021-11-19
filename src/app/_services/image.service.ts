@@ -24,8 +24,8 @@ export class ImageService {
     return this.http.post(API_URL + 'upload_image', uploadImageData);
   }
 
-  public uploadProfileImage(uploadImageData: FormData): Observable<any> {
-    return this.http.post(API_URL + 'upload_profile_image', uploadImageData);
+  public uploadProfileImage(uploadImageData: FormData): Observable<ImageModel> {
+    return this.http.post<ImageModel>(API_URL + 'upload_profile_image', uploadImageData);
   }
 
   public getProfileImage(userId: number): Observable<ImageModel> {
