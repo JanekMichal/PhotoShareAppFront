@@ -12,8 +12,24 @@ export class ImageService {
   constructor(private http: HttpClient) {
   }
 
+  public getImage(imageId: number): Observable<ImageModel> {
+    return this.http.get<ImageModel>(API_URL + 'get/' + imageId);
+  }
+
+  public getFeedImagesPaged(pageNumber: number): Observable<ImageModel[]> {
+    return this.http.get<ImageModel[]>(API_URL + 'get_feed_images_paged/' + pageNumber);
+  }
+
   public getFeedImages(): Observable<ImageModel[]> {
     return this.http.get<ImageModel[]>(API_URL + 'get_feed_images');
+  }
+
+  public getAllImages(userId: number): Observable<ImageModel[]> {
+    return this.http.get<ImageModel[]>(API_URL + 'get/all_images/' + userId);
+  }
+
+  public getProfileImage(userId: number): Observable<ImageModel> {
+    return this.http.get<ImageModel>(API_URL + 'get_profile_image/' + userId);
   }
 
   public changeDescription(imageId: number, description: string): Observable<ImageModel> {
@@ -28,9 +44,6 @@ export class ImageService {
     return this.http.post<ImageModel>(API_URL + 'upload_profile_image', uploadImageData);
   }
 
-  public getAllImages(userId: number): Observable<ImageModel[]> {
-    return this.http.get<ImageModel[]>(API_URL + 'get/all_images/' + userId);
-  }
 
   public deleteOwnImage(imageId: number): Observable<any> {
     return this.http.delete<void>(API_URL + 'delete_own_image/' + imageId);
@@ -40,11 +53,5 @@ export class ImageService {
     return this.http.delete<void>(API_URL + 'delete_someone_image/' + imageId);
   }
 
-  public getImage(imageId: number): Observable<ImageModel> {
-    return this.http.get<ImageModel>(API_URL + 'get/' + imageId);
-  }
 
-  public getProfileImage(userId: number): Observable<ImageModel> {
-    return this.http.get<ImageModel>(API_URL + 'get_profile_image/' + userId);
-  }
 }

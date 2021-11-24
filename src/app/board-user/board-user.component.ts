@@ -28,7 +28,7 @@ export class BoardUserComponent implements OnInit {
   comment: CommentModel;
   commentsCount: number;
   commentsPageNumber = 0;
-  commentsPageSize = 5;
+  imagesPageNumber = 0;
   imageWithLoadedCommentsId: number;
   areThereMoreComments = true;
   commentsLoadedCount = 0;
@@ -46,9 +46,11 @@ export class BoardUserComponent implements OnInit {
   ngOnInit(): void {
     this.currentUser = this.token.getUser();
     this.currentUserId = this.currentUser.id;
-    this.getFeedImages();
+    this.getFeedImagesPaged();
+    console.log(this.allImagesResponse);
   }
 
+  // ----------------------- COMMENTS -----------------------------
   public getCommentsCount(imageId: number): number {
     this.commentService.getCommentsCount(imageId).subscribe(
       (response: number) => {
@@ -85,20 +87,6 @@ export class BoardUserComponent implements OnInit {
       this.areThereMoreComments = false;
       this.areCommentsCollapsed = true;
     }
-  }
-
-  public likeImage(image: ImageModel): void {
-    console.log(image);
-    this.likeService.addLike(image.id).subscribe();
-    this.allImagesResponse[image.index].isLiked = true;
-    this.allImagesResponse[image.index].likesCount++;
-  }
-
-  public deleteLike(image: ImageModel): void {
-    console.log(image);
-    this.likeService.addLike(image.id).subscribe();
-    this.allImagesResponse[image.index].isLiked = false;
-    this.allImagesResponse[image.index].likesCount--;
   }
 
   public getCommentsPaged(imageId: number): void {
@@ -164,13 +152,23 @@ export class BoardUserComponent implements OnInit {
     );
   }
 
-  public getFeedImages(): void {
-    this.imageService.getFeedImages().subscribe(
+  // ----------------------- LIKES -----------------------------
+  public likeImage(image: ImageModel): void {
+    this.likeService.addLike(image.id).subscribe();
+    this.allImagesResponse[this.allImagesResponse.indexOf(image)].isLiked = true;
+    this.allImagesResponse[this.allImagesResponse.indexOf(image)].likesCount++;
+  }
+
+  public deleteLike(image: ImageModel): void {
+    this.likeService.addLike(image.id).subscribe();
+    this.allImagesResponse[this.allImagesResponse.indexOf(image)].isLiked = false;
+    this.allImagesResponse[this.allImagesResponse.indexOf(image)].likesCount--;
+  }
+
+  public getFeedImagesPaged(): void {
+    this.imageService.getFeedImagesPaged(this.imagesPageNumber).subscribe(
       (response: ImageModel[]) => {
-        this.allImagesResponse = response;
-        for (let i = 0; i < this.allImagesResponse.length; i++){
-          const item = this.allImagesResponse[i];
-          this.allImagesResponse[i].index = i;
+        response.forEach(item => {
           item.picByte = 'data:image/jpeg;base64,' + item.picByte;
           this.userService.getUser(item.ownerId).subscribe(
             (userResponse: User) => {
@@ -184,16 +182,20 @@ export class BoardUserComponent implements OnInit {
           );
           this.likeService.getLikesCount(item.id).subscribe(
             (likesCountResponse: number) => {
-              console.log(likesCountResponse);
               item.likesCount = likesCountResponse;
             }
           );
           this.likeService.isUserLikingThisPhoto(item.id).subscribe(
             (isLikingResponse: boolean) => {
-              console.log(isLikingResponse);
               item.isLiked = isLikingResponse;
             }
           );
+        });
+        this.imagesPageNumber++;
+        if (this.allImagesResponse == null) {
+          this.allImagesResponse = response;
+        } else {
+          this.allImagesResponse = this.allImagesResponse.concat(response);
         }
       },
       (error: HttpErrorResponse) => {

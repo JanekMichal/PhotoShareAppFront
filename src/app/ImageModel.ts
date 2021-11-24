@@ -8,5 +8,4 @@ export interface ImageModel {
   commentsCount: number;
   likesCount: number;
   isLiked: boolean;
-  index: number;
 }
