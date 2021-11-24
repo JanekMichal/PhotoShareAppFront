@@ -19,7 +19,7 @@ import {CommentService} from '../_services/comment.service';
 export class BoardUserComponent implements OnInit {
 
   allImagesResponse: ImageModel[];
-  currentUser: any;
+  currentUser: User;
   currentUserId: number;
   description: string;
 

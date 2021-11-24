@@ -3,17 +3,21 @@
   <table class="table">
     <thead class="thead-dark">
     <tr>
-      <th scope="col">ID</th>
-      <th scope="col">User name</th>
-      <th scope="col">E-mail</th>
-      <th scope="col">Role</th>
-      <th scope="col">Actions</th>
+      <th scope="col" *ngIf="!sortedById">ID <button (click)="sortUsersByIdASC()" type="button" class="btn btn-outline-default waves-effect bi bi bi-sort-numeric-up"><i class="fas fa-star pr-2" aria-hidden="true"></i></button> </th>
+      <th scope="col" *ngIf="sortedById">ID <button (click)="sortUsersByIdDESC()" type="button" class="btn btn-outline-default waves-effect bi bi bi-sort-numeric-down"><i class="fas fa-star pr-2" aria-hidden="true"></i></button> </th>
+      <th scope="col" *ngIf="!sortedByUsername">User name <button (click)="sortUsersByUsernameASC()" type="button" class="btn btn-outline-default waves-effect bi bi-sort-alpha-up"><i class="fas fa-star pr-2" aria-hidden="true"></i></button></th>
+      <th scope="col" *ngIf="sortedByUsername">User name <button (click)="sortUsersByUsernameDESC()" type="button" class="btn btn-outline-default waves-effect bi bi-sort-alpha-down"><i class="fas fa-star pr-2" aria-hidden="true"></i></button></th>
+      <th scope="col" *ngIf="!sortedByEmail">E-mail <button (click)="sortUsersByEmailASC()" type="button" class="btn btn-outline-default waves-effect bi bi-sort-alpha-up"><i class="fas fa-star pr-2" aria-hidden="true"></i></button></th>
+      <th scope="col" *ngIf="sortedByEmail">E-mail <button (click)="sortUsersByEmailDESC()" type="button" class="btn btn-outline-default waves-effect bi bi-sort-alpha-down"><i class="fas fa-star pr-2" aria-hidden="true"></i></button></th>
+      <th scope="col" *ngIf="!sortedByRole">Role <button (click)="sortUsersByRoleASC()" type="button" class="btn btn-outline-default waves-effect bi bi-sort-alpha-up"><i class="fas fa-star pr-2" aria-hidden="true"></i></button></th>
+      <th scope="col" *ngIf="sortedByRole">Role <button (click)="sortUsersByRoleDESC()" type="button" class="btn btn-outline-default waves-effect bi bi-sort-alpha-down"><i class="fas fa-star pr-2" aria-hidden="true"></i></button></th>
+      <th scope="col" >Actions</th>
     </tr>
     </thead>
     <tbody *ngFor="let user of users">
     <tr>
       <th scope="row">{{user?.id}}</th>
-      <td>{{user?.username}}</td>
+      <td> <p (click)="onViewUserProfile(user.id)" routerLink="view-profile">{{user?.username}} </p>  </td>
       <td>{{user?.email}}</td>
       <td>{{ user?.role }}</td>
       <td>

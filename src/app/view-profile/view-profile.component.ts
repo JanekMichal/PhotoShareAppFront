@@ -72,7 +72,7 @@ export class ViewProfileComponent implements OnInit {
   }
 
   onDeleteAccount(): void {
-    this.userService.deleteUser(this.searchedUserId).subscribe(
+    this.userService.deleteSomeoneElseAccount(this.searchedUserId).subscribe(
       () => {
 
       },

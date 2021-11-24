@@ -6,7 +6,7 @@ import {TokenStorageService} from '../_services/token-storage.service';
 import {ImageService} from '../_services/image.service';
 import {HttpErrorResponse} from '@angular/common/http';
 import {UserService} from '../_services/user.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-profile-editor',
@@ -21,7 +21,7 @@ export class ProfileEditorComponent implements OnInit {
   title = 'angular-image-uploader';
 
   imageChangedEvent: any = '';
-  croppedImage: any = '';
+  croppedImage: any;
 
   selectedFile: File;
   croppedImageToFile: File;
@@ -60,8 +60,7 @@ export class ProfileEditorComponent implements OnInit {
   constructor(private token: TokenStorageService,
               private imageService: ImageService,
               private userService: UserService,
-              private router: Router,
-              private route: ActivatedRoute) {
+              private router: Router) {
   }
 
   ngOnInit(): void {
@@ -114,7 +113,7 @@ export class ProfileEditorComponent implements OnInit {
   }
 
   onDeleteAccount(): void {
-    this.userService.deleteUser(this.currentUser.id).subscribe(
+    this.userService.deleteOwnAccount(this.currentUser.id).subscribe(
       () => {
         this.token.signOut();
         this.router.navigate([`/register`]);

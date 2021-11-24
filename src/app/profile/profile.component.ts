@@ -236,8 +236,10 @@ export class ProfileComponent implements OnInit {
   public getProfileImage(): void {
     this.imageService.getProfileImage(this.currentUser.id).subscribe(
       (res: ImageModel) => {
-        this.profilePhoto = res;
-        this.profilePhoto.picByte = 'data:image/jpeg;base64,' + this.profilePhoto.picByte;
+        if (res != null) {
+          this.profilePhoto = res;
+          this.profilePhoto.picByte = 'data:image/jpeg;base64,' + this.profilePhoto.picByte;
+        }
       },
       (error: HttpErrorResponse) => {
         alert(error.message);

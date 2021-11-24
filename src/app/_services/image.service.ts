@@ -28,10 +28,6 @@ export class ImageService {
     return this.http.post<ImageModel>(API_URL + 'upload_profile_image', uploadImageData);
   }
 
-  public getProfileImage(userId: number): Observable<ImageModel> {
-    return this.http.get<ImageModel>(API_URL + 'get_profile_image/' + userId);
-  }
-
   public getAllImages(userId: number): Observable<ImageModel[]> {
     return this.http.get<ImageModel[]>(API_URL + 'get/all_images/' + userId);
   }
@@ -46,5 +42,9 @@ export class ImageService {
 
   public getImage(imageId: number): Observable<ImageModel> {
     return this.http.get<ImageModel>(API_URL + 'get/' + imageId);
+  }
+
+  public getProfileImage(userId: number): Observable<ImageModel> {
+    return this.http.get<ImageModel>(API_URL + 'get_profile_image/' + userId);
   }
 }

@@ -2,6 +2,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {Component, OnInit} from '@angular/core';
 import {User} from '../user';
 import {UserService} from '../_services/user.service';
+import {DataService} from '../_services/data.service';
 
 @Component({
   selector: 'app-board-admin',
@@ -20,7 +21,13 @@ export class BoardAdminComponent implements OnInit {
 
   pageNumber = 0;
 
-  constructor(private userService: UserService) {
+  sortedById = false;
+  sortedByEmail = false;
+  sortedByRole = false;
+  sortedByUsername = false;
+
+  constructor(private data: DataService,
+              private userService: UserService) {
   }
 
   ngOnInit(): void {
@@ -39,6 +46,7 @@ export class BoardAdminComponent implements OnInit {
   }
 
   public getUsersPage(): void {
+    this.setAllSortFlagsToFalse();
     this.userService.getUsersPage(this.pageNumber).subscribe(
       (response: User[]) => {
         if (this.pageNumber === 0) {
@@ -47,11 +55,6 @@ export class BoardAdminComponent implements OnInit {
           this.users = this.users.concat(response);
         }
         this.pageNumber++;
-        // for (let i = 0; i < response.length; i++) {
-        //   this.users[i] = response[i];
-        //   console.log(response[i])
-        // }
-
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -59,30 +62,125 @@ export class BoardAdminComponent implements OnInit {
     );
   }
 
-  public getUsersPage2(): void {
-    this.userService.getUsersPage(1).subscribe(
-      (response: User[]) => {
-        if (this.pageNumber === 0) {
-          this.pageNumber++;
-          this.users = response;
-        } else {
-          this.users = this.users.concat(response);
-        }
-        // for (let i = 0; i < response.length; i++) {
-        //   this.users[i] = response[i];
-        //   console.log(response[i])
-        // }
-
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.message);
-      }
-    );
+  public setAllSortFlagsToFalse(): void {
+    this.sortedById = false;
+    this.sortedByUsername = false;
+    this.sortedByRole = false;
+    this.sortedByEmail = false;
   }
 
+  public sortUsersByUsernameASC(): void {
+    this.setAllSortFlagsToFalse();
+    this.sortedByUsername = true;
+    this.users.sort((index1, index2) => {
+      if (index1.username > index2.username) {
+        return 1;
+      } else if (index1.username < index2.username) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+  }
+  onViewUserProfile(id: number): void {
+    this.data.setSearchedUserId(id);
+  }
+  public sortUsersByUsernameDESC(): void {
+    this.setAllSortFlagsToFalse();
+    this.users.sort((index1, index2) => {
+      if (index1.username < index2.username) {
+        return 1;
+      } else if (index1.username > index2.username) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+  }
+
+  public sortUsersByIdASC(): void {
+    this.setAllSortFlagsToFalse();
+    this.sortedById = true;
+    this.users.sort((index1, index2) => {
+      if (index1.id > index2.id) {
+        return 1;
+      } else if (index1.id < index2.id) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+  }
+
+  public sortUsersByIdDESC(): void {
+    this.setAllSortFlagsToFalse();
+    this.users.sort((index1, index2) => {
+      if (index1.id < index2.id) {
+        return 1;
+      } else if (index1.id > index2.id) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+  }
+
+  sortUsersByEmailASC(): void {
+    this.setAllSortFlagsToFalse();
+    this.sortedByEmail = true;
+    this.users.sort((index1, index2) => {
+      if (index1.email > index2.email) {
+        return 1;
+      } else if (index1.email < index2.email) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+  }
+
+  sortUsersByEmailDESC(): void {
+    this.setAllSortFlagsToFalse();
+    this.users.sort((index1, index2) => {
+      if (index1.email < index2.email) {
+        return 1;
+      } else if (index1.email > index2.email) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+  }
+
+  sortUsersByRoleASC(): void {
+    this.setAllSortFlagsToFalse();
+    this.sortedByRole = true;
+    this.users.sort((index1, index2) => {
+      if (index1.role > index2.role) {
+        return 1;
+      } else if (index1.role < index2.role) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+  }
+
+  sortUsersByRoleDESC(): void {
+    this.setAllSortFlagsToFalse();
+    this.users.sort((index1, index2) => {
+      if (index1.role < index2.role) {
+        return 1;
+      } else if (index1.role > index2.role) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+  }
 
   public onDeleteUser(userId: number): void {
-    this.userService.deleteUser(userId).subscribe(
+    this.userService.deleteSomeoneElseAccount(userId).subscribe(
       (response: void) => {
         console.log(response);
         this.getUsers();
@@ -148,5 +246,6 @@ export class BoardAdminComponent implements OnInit {
       }
     );
   }
+
 
 }

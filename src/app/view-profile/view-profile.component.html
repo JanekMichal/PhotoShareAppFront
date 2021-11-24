@@ -29,9 +29,9 @@
              alt="empty avatar image"/>
       </div>
 
-      <button *ngIf="currentUser.role == 'ADMIN' || currentUser.role == 'MODERATOR' && searchedUserId != currentUser.id" type="button"
+      <button *ngIf="currentUser.role == 'ADMIN' && searchedUserId != currentUser.id" type="button"
               class="btn btn-outline-danger" data-bs-toggle="modal"
-              data-bs-target="#deleteAccountModal">Delete Account
+              data-bs-target="#deleteAccountModal" >Delete Account
       </button>
 
       <button *ngIf="currentUser.role == 'ADMIN' && searchedUserId != currentUser.id" type="button"
@@ -51,7 +51,7 @@
 
             <div class="modal-footer">
               <button (click)="onDeleteAccount()" type="button" class="btn btn-outline-danger"
-                      data-bs-dismiss="modal">Confirm
+                      data-bs-dismiss="modal" routerLink="board-admin">Confirm
               </button>
               <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Cancel</button>
             </div>
@@ -71,9 +71,6 @@
             </div>
 
             <div class="modal-footer">
-              <button (click)="giveRole('admin')" type="button" class="btn btn-outline-danger"
-                      data-bs-dismiss="modal">Admin
-              </button>
               <button (click)="giveRole('moderator')" type="button" class="btn btn-outline-danger"
                       data-bs-dismiss="modal">Moderator
               </button>

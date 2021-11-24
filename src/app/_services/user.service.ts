@@ -45,8 +45,12 @@ export class UserService {
     return this.http.get<User[]>(API_URL + 'search/' + name);
   }
 
-  deleteUser(userId: number): Observable<void> {
-    return this.http.delete<void>(API_URL + 'delete_user/' + userId);
+  deleteSomeoneElseAccount(userId: number): Observable<void> {
+    return this.http.delete<void>(API_URL + 'delete_someone_else_account/' + userId);
+  }
+
+  deleteOwnAccount(userId: number): Observable<void> {
+    return this.http.delete<void>(API_URL + 'delete_own_account/' + userId);
   }
 
   changePassword(userId: number, newPassword: string): Observable<any> {
@@ -78,9 +82,7 @@ export class UserService {
   }
 
   giveRole(userId: number, role: string): Observable<User> {
-    if (role === 'admin') {
-      return this.http.patch<User>(API_URL + 'give_admin_role/' + userId, null);
-    } else if (role === 'admin') {
+    if (role === 'moderator') {
       return this.http.patch<User>(API_URL + 'give_moderator_role/' + userId, null);
     } else if (role === 'user') {
       return this.http.patch<User>(API_URL + 'give_user_role/' + userId, null);

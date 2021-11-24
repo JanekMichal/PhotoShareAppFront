@@ -25,7 +25,8 @@
                 comment.authorName }}:</h5>
               <p id="commentDescription"> {{ comment.description }} </p>
 
-              <button *ngIf="currentUserId == comment.ownerId" class="btn"
+              <button *ngIf="currentUserId == comment.ownerId || currentUser.role == 'ADMIN' || currentUser.role == 'MODERATOR'"
+                      class="btn"
                       (click)="deleteComment(comment.id, picture.id)"><i class="bi bi-x-lg" id="deleteCommentIcon"></i>
               </button>
             </div>
