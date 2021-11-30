@@ -40,6 +40,7 @@ export class ProfileComponent implements OnInit {
   imageName: any;
   allImagesResponse: ImageModel[];
   selectedImage: any;
+  selectedDeleteImage: ImageModel;
   currentImageId: number;
 
   acceptableFileTypes = ['image/jpeg', 'image.png'];
@@ -162,7 +163,6 @@ export class ProfileComponent implements OnInit {
 
   public onFileChanged(event): void {
     this.selectedFile = event.target.files[0];
-
     const preview = document.querySelector('#selectedFileStatus');
     while (preview.firstChild) {
       preview.removeChild(preview.firstChild);
@@ -186,10 +186,10 @@ export class ProfileComponent implements OnInit {
     this.getImage(pictureId);
   }
 
-  public onDeleteImage(image: ImageModel): void {
-    this.imageService.deleteOwnImage(image.id).subscribe(
+  public onDeleteImage(): void {
+    this.imageService.deleteOwnImage(this.selectedDeleteImage.id).subscribe(
       () => {
-        const index = this.allImagesResponse.indexOf(image);
+        const index = this.allImagesResponse.indexOf(this.selectedDeleteImage);
         if (index > -1) {
           this.allImagesResponse.splice(index, 1);
         }
@@ -208,7 +208,6 @@ export class ProfileComponent implements OnInit {
 
       this.imageService.uploadImage(uploadImageData).subscribe(
         (response: ImageModel) => {
-          console.log(response);
           response.picByte = 'data:image/jpeg;base64,' + response.picByte;
           this.allImagesResponse.unshift(response);
         },
@@ -255,5 +254,9 @@ export class ProfileComponent implements OnInit {
         this.selectedImage = this.retrievedImage;
       }
     );
+  }
+
+  public onOpenDeleteModal(image: ImageModel): void {
+    this.selectedDeleteImage = image;
   }
 }

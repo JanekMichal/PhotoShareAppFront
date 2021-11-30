@@ -47,56 +47,65 @@ export class BoardUserComponent implements OnInit {
     this.currentUser = this.token.getUser();
     this.currentUserId = this.currentUser.id;
     this.getFeedImagesPaged();
-    console.log(this.allImagesResponse);
   }
 
   // ----------------------- COMMENTS -----------------------------
-  public getCommentsCount(imageId: number): number {
-    this.commentService.getCommentsCount(imageId).subscribe(
-      (response: number) => {
-        this.commentsCount = response;
-        console.log('Response: ' + this.commentsCount);
-      }
-    );
-    return this.commentsCount;
-  }
 
-  public addComment(userId: number, imageId: number, description: string): void {
-    this.commentService.addComment(userId, imageId, description).subscribe(
-      (response: number) => {
-        this.commentsCount = response;
-        this.getComments(imageId);
+  public addComment(userId: number, imageModel: ImageModel, description: string): void {
+    this.commentService.addComment(userId, imageModel.id, description).subscribe(
+      (response: CommentModel) => {
+        this.commentService.getCommentsCount(imageModel.id).subscribe(
+          (commentsCountResponse: number) => {
+            const index = this.allImagesResponse.indexOf(imageModel);
+            this.allImagesResponse[index].commentsCount = commentsCountResponse;
+          }
+        );
+        this.comments.unshift(response);
+        this.userService.getUser(this.comments[0].ownerId).subscribe(
+          (userResponse: User) => {
+            this.comments[0].authorName = userResponse.username;
+          }
+        );
       }
     );
     this.description = ' ';
-
   }
 
-  public deleteComment(commentId: number, imageId: number): void {
-    this.commentService.deleteComment(commentId).subscribe(
-      () => this.getComments(imageId)
+  public deleteComment(comment: CommentModel, imageModel: ImageModel): void {
+    this.commentService.deleteComment(comment.id).subscribe(
+      () => {
+        const commentIndex = this.comments.indexOf(comment);
+        this.comments.splice(commentIndex, 1);
+
+        this.commentService.getCommentsCount(imageModel.id).subscribe(
+          (commentsCountResponse: number) => {
+            const index = this.allImagesResponse.indexOf(imageModel);
+            this.allImagesResponse[index].commentsCount = commentsCountResponse;
+          }
+        );
+      }
     );
   }
 
-  public commentsButtonClick(imageId: number): void {
-    if (this.areCommentsCollapsed === true || this.imageWithLoadedCommentsId !== imageId) {
+  public commentsButtonClick(imageModel: ImageModel): void {
+    if (this.areCommentsCollapsed === true || this.imageWithLoadedCommentsId !== imageModel.id) {
       this.areCommentsCollapsed = false;
       this.areThereMoreComments = true;
-      this.getCommentsPaged(imageId);
+      this.getCommentsPaged(imageModel);
     } else {
       this.areThereMoreComments = false;
       this.areCommentsCollapsed = true;
     }
   }
 
-  public getCommentsPaged(imageId: number): void {
-    if (this.imageWithLoadedCommentsId !== imageId) {
+  public getCommentsPaged(imageModel: ImageModel): void {
+    if (this.imageWithLoadedCommentsId !== imageModel.id) {
       this.commentsPageNumber = 0;
     }
-    this.commentService.getCommentsPaged(imageId, this.commentsPageNumber).subscribe(
+    this.commentService.getCommentsPaged(imageModel.id, this.commentsPageNumber).subscribe(
       (response: CommentModel[]) => {
-        if (this.imageWithLoadedCommentsId !== imageId) {
-          this.imageWithLoadedCommentsId = imageId;
+        if (this.imageWithLoadedCommentsId !== imageModel.id) {
+          this.imageWithLoadedCommentsId = imageModel.id;
           this.comments = response;
           this.commentsLoadedCount = response.length;
         } else {
@@ -111,7 +120,7 @@ export class BoardUserComponent implements OnInit {
             }
           );
         });
-        this.commentService.getCommentsCount(imageId).subscribe(
+        this.commentService.getCommentsCount(imageModel.id).subscribe(
           (commentsCountResponse: number) => {
             this.commentsCount = commentsCountResponse;
             if (this.commentsLoadedCount === this.commentsCount) {
@@ -129,28 +138,6 @@ export class BoardUserComponent implements OnInit {
     );
   }
 
-  public getComments(imageId: number): void {
-    this.commentService.getComments(imageId).subscribe(
-      (response: CommentModel[]) => {
-        this.comments = response;
-        for (let i = 0; i < this.comments.length; i++) {
-          this.userService.getUser(this.comments[i].ownerId).subscribe(
-            (userResponse: User) => {
-              this.comments[i].authorName = userResponse.username;
-              this.commentService.getCommentsCount(this.allImagesResponse[i].id).subscribe(
-                (commentsCountResponse: number) => {
-                  this.allImagesResponse[i].commentsCount = commentsCountResponse;
-                }
-              );
-            }
-          );
-        }
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.message);
-      }
-    );
-  }
 
   // ----------------------- LIKES -----------------------------
   public likeImage(image: ImageModel): void {

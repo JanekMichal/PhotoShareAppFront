@@ -1,46 +1,46 @@
 <div class="album py-5 bg-light">
   <div class="container" style="max-width: 800px;">
 
-    <div *ngFor="let picture of allImagesResponse">
+    <div *ngFor="let image of allImagesResponse">
       <div class="card mb-3">
         <div class="card-body">
 
-          <h5 (click)="onViewUserProfile(picture?.ownerId)" class="card-title" routerLink="view-profile">
-            {{picture.name}}</h5>
+          <h5 (click)="onViewUserProfile(image?.ownerId)" class="card-title" routerLink="view-profile">
+            {{image.name}}</h5>
         </div>
-        <img [src]="picture.picByte" class="card-img-top" alt="Picture on the main page">
+        <img [src]="image.picByte" class="card-img-top" alt="Picture on the main page">
         <div class="card-body">
-          <p class="card-text">{{ picture.description }} </p>
-          <button *ngIf="picture.isLiked" (click)="deleteLike(picture)" class="btn"><i class="bi bi-heart-fill"></i></button>
-          <button *ngIf="picture.isLiked == false" (click)="likeImage(picture)" class="btn"><i class="bi bi-heart"></i></button>
-          {{ picture.likesCount }}
-          <button class="btn" (click)="commentsButtonClick(picture?.id)"><i class="bi bi-chat"></i></button>
-          {{ picture.commentsCount }}
+          <p class="card-text">{{ image.description }} </p>
+          <button *ngIf="image.isLiked" (click)="deleteLike(image)" class="btn"><i class="bi bi-heart-fill"></i></button>
+          <button *ngIf="image.isLiked == false" (click)="likeImage(image)" class="btn"><i class="bi bi-heart"></i></button>
+          {{ image.likesCount }}
+          <button class="btn" (click)="commentsButtonClick(image)"><i class="bi bi-chat"></i></button>
+          {{ image.commentsCount }}
           <button class="btn"><i class="bi bi-share"></i></button>
 
 
           <div *ngFor="let comment of comments">
-            <div *ngIf="picture?.id == comment?.imageId && areCommentsCollapsed == false" class="commentBody">
+            <div *ngIf="image?.id == comment?.imageId && areCommentsCollapsed == false" class="commentBody">
               <h5 id="commentUserName" (click)="onViewUserProfile(comment.ownerId)" routerLink="view-profile">{{
                 comment.authorName }}:</h5>
               <p id="commentDescription"> {{ comment.description }} </p>
 
               <button *ngIf="currentUserId == comment.ownerId || currentUser.role == 'ADMIN' || currentUser.role == 'MODERATOR'"
                       class="btn"
-                      (click)="deleteComment(comment.id, picture.id)"><i class="bi bi-x-lg" id="deleteCommentIcon"></i>
+                      (click)="deleteComment(comment, image)"><i class="bi bi-x-lg" id="deleteCommentIcon"></i>
               </button>
             </div>
 
           </div>
           <div style="text-align: center; ">
-            <button *ngIf="imageWithLoadedCommentsId == picture.id && areThereMoreComments == true"
-                    (click)="getCommentsPaged(picture?.id)" style="justify-content: center;" type="button"
+            <button *ngIf="imageWithLoadedCommentsId == image.id && areThereMoreComments == true"
+                    (click)="getCommentsPaged(image)" style="justify-content: center;" type="button"
                     class="btn btn-outline-primary">Load more comments
             </button>
           </div>
           <div class="input-group mb-3" id="commentInputBar">
 
-            <button (click)="addComment(currentUserId, picture.id, description)" class="btn btn-outline-secondary"
+            <button (click)="addComment(currentUserId, image, description)" class="btn btn-outline-secondary"
                     type="button" id="button-addComment">Add Comment!
             </button>
             <input [(ngModel)]="description" type="text" class="form-control" placeholder="">

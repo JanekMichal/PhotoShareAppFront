@@ -7,6 +7,7 @@ import {ImageService} from '../_services/image.service';
 import {HttpErrorResponse} from '@angular/common/http';
 import {UserService} from '../_services/user.service';
 import {Router} from '@angular/router';
+import {AuthService} from '../_services/auth.service';
 
 @Component({
   selector: 'app-profile-editor',
@@ -60,7 +61,8 @@ export class ProfileEditorComponent implements OnInit {
   constructor(private token: TokenStorageService,
               private imageService: ImageService,
               private userService: UserService,
-              private router: Router) {
+              private router: Router,
+              private authService: AuthService) {
   }
 
   ngOnInit(): void {
@@ -79,7 +81,6 @@ export class ProfileEditorComponent implements OnInit {
     this.imageService.uploadProfileImage(uploadImageData)
       .subscribe(
         (response) => {
-          console.log(response);
           this.refresh();
         },
         (error: HttpErrorResponse) => {
@@ -115,6 +116,7 @@ export class ProfileEditorComponent implements OnInit {
   onDeleteAccount(): void {
     this.userService.deleteOwnAccount(this.currentUser.id).subscribe(
       () => {
+        alert('It was nice to have you in our community. Hope you will come back :(');
         this.token.signOut();
         this.router.navigate([`/register`]);
       },
@@ -131,7 +133,7 @@ export class ProfileEditorComponent implements OnInit {
 
       this.userService.changePassword(this.currentUser.id, this.newPasswordForm).subscribe(
         () => {
-
+          alert('Password changed! Now you will be logged out.');
           this.token.signOut();
           this.router.navigate([`/login`]);
         },
@@ -150,13 +152,12 @@ export class ProfileEditorComponent implements OnInit {
 
     this.userService.updateUserData(this.editUser).subscribe(
       () => {
-        this.token.signOut();
-        this.router.navigate([`/login`]);
+        alert('Data changed!');
+        // this.token.signOut();
+        // this.router.navigate([`/login`]);
       },
       (error: HttpErrorResponse) => {
-
         alert(error.message);
-
       }
     );
   }

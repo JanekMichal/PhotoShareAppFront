@@ -10,3 +10,17 @@
 .img-hover-zoom:hover img {
   transform: scale(1.2);
 }
+
+#edit-profile, #profile-name {
+  display: inline;
+}
+
+#edit-profile {
+  float: right;
+}
+
+#profile-data {
+  margin-top: 0.5rem;
+  margin-bottom: 0.2rem;
+}
+

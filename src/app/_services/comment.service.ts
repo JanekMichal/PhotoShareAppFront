@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {CommentModel} from '../CommentModel';
 import {HttpClient} from '@angular/common/http';
+import {Comment} from '@angular/compiler';
 
 const API_URL = 'http://localhost:8080/comment/';
 
@@ -14,8 +15,8 @@ export class CommentService {
   constructor(private http: HttpClient) {
   }
 
-  public addComment(userId: number, imageId: number, description: string): Observable<any> {
-    return this.http.post<string>(API_URL + 'add_comment/' + imageId, description);
+  public addComment(userId: number, imageId: number, description: string): Observable<CommentModel> {
+    return this.http.post<CommentModel>(API_URL + 'add_comment/' + imageId, description);
   }
 
   public deleteComment(commentId: number): Observable<any> {
