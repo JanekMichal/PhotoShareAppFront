@@ -28,6 +28,7 @@ const routes: Routes = [
   {path: 'search/profile', component: ProfileComponent},
   {path: 'user/view-profile', component: ViewProfileComponent},
   {path: 'profile/profile-editor', component: ProfileEditorComponent},
+  {path: 'profile/view-profile', component: ViewProfileComponent},
   {path: '', redirectTo: 'home', pathMatch: 'full'}
 ];
 

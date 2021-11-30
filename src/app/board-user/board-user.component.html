@@ -11,8 +11,10 @@
         <img [src]="image.picByte" class="card-img-top" alt="Picture on the main page">
         <div class="card-body">
           <p class="card-text">{{ image.description }} </p>
-          <button *ngIf="image.isLiked" (click)="deleteLike(image)" class="btn"><i class="bi bi-heart-fill"></i></button>
-          <button *ngIf="image.isLiked == false" (click)="likeImage(image)" class="btn"><i class="bi bi-heart"></i></button>
+          <button *ngIf="image.isLiked" (click)="deleteLike(image)" class="btn"><i class="bi bi-heart-fill"></i>
+          </button>
+          <button *ngIf="image.isLiked == false" (click)="likeImage(image)" class="btn"><i class="bi bi-heart"></i>
+          </button>
           {{ image.likesCount }}
           <button class="btn" (click)="commentsButtonClick(image)"><i class="bi bi-chat"></i></button>
           {{ image.commentsCount }}
@@ -25,13 +27,14 @@
                 comment.authorName }}:</h5>
               <p id="commentDescription"> {{ comment.description }} </p>
 
-              <button *ngIf="currentUserId == comment.ownerId || currentUser.role == 'ADMIN' || currentUser.role == 'MODERATOR'"
-                      class="btn"
-                      (click)="deleteComment(comment, image)"><i class="bi bi-x-lg" id="deleteCommentIcon"></i>
+              <button
+                *ngIf="currentUserId == comment.ownerId || currentUser.role == 'ADMIN' || currentUser.role == 'MODERATOR'"
+                class="btn"
+                (click)="deleteComment(comment, image)"><i class="bi bi-x-lg" id="deleteCommentIcon"></i>
               </button>
             </div>
-
           </div>
+
           <div style="text-align: center; ">
             <button *ngIf="imageWithLoadedCommentsId == image.id && areThereMoreComments == true"
                     (click)="getCommentsPaged(image)" style="justify-content: center;" type="button"
@@ -51,7 +54,8 @@
     </div>
 
     <div style="justify-content: center; display: flex;">
-      <button (click)="getFeedImagesPaged()" style="justify-content: center;" type="button" class="btn btn-outline-primary">GET
+      <button (click)="getFeedImagesPaged()" style="justify-content: center;" type="button"
+              class="btn btn-outline-primary">GET
         MORE
       </button>
     </div>

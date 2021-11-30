@@ -20,6 +20,10 @@ export class LikeService {
     }, httpOptions);
   }
 
+  public deleteLike(imageId: number): Observable<any> {
+    return this.http.delete(API_URL + 'delete_like/' + imageId );
+  }
+
   public getLikesCount(imageId: number): Observable<number> {
     return this.http.get<number>(API_URL + 'likes_count/' + imageId);
   }

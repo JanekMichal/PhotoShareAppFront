@@ -24,3 +24,21 @@
   margin-bottom: 0.2rem;
 }
 
+#commentDescription, #commentUserName {
+  display: inline;
+}
+
+#commentInputBar {
+  margin-top: 10px;
+}
+
+#deleteCommentIcon {
+  position: absolute;
+  right: 10px;
+  top: 0;
+}
+
+.commentBody {
+  position: relative;
+}
+

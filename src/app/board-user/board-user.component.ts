@@ -77,12 +77,9 @@ export class BoardUserComponent implements OnInit {
         const commentIndex = this.comments.indexOf(comment);
         this.comments.splice(commentIndex, 1);
 
-        this.commentService.getCommentsCount(imageModel.id).subscribe(
-          (commentsCountResponse: number) => {
-            const index = this.allImagesResponse.indexOf(imageModel);
-            this.allImagesResponse[index].commentsCount = commentsCountResponse;
-          }
-        );
+        const index = this.allImagesResponse.indexOf(imageModel);
+        this.allImagesResponse[index].commentsCount--;
+        this.commentsLoadedCount--;
       }
     );
   }
@@ -141,15 +138,21 @@ export class BoardUserComponent implements OnInit {
 
   // ----------------------- LIKES -----------------------------
   public likeImage(image: ImageModel): void {
-    this.likeService.addLike(image.id).subscribe();
-    this.allImagesResponse[this.allImagesResponse.indexOf(image)].isLiked = true;
-    this.allImagesResponse[this.allImagesResponse.indexOf(image)].likesCount++;
+    this.likeService.addLike(image.id).subscribe(
+      () => {
+        this.allImagesResponse[this.allImagesResponse.indexOf(image)].isLiked = true;
+        this.allImagesResponse[this.allImagesResponse.indexOf(image)].likesCount++;
+      }
+    );
   }
 
   public deleteLike(image: ImageModel): void {
-    this.likeService.addLike(image.id).subscribe();
-    this.allImagesResponse[this.allImagesResponse.indexOf(image)].isLiked = false;
-    this.allImagesResponse[this.allImagesResponse.indexOf(image)].likesCount--;
+    this.likeService.deleteLike(image.id).subscribe(
+      () => {
+        this.allImagesResponse[this.allImagesResponse.indexOf(image)].isLiked = false;
+        this.allImagesResponse[this.allImagesResponse.indexOf(image)].likesCount--;
+      }
+    );
   }
 
   public getFeedImagesPaged(): void {
