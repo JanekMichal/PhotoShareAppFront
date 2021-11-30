@@ -1,64 +1,49 @@
 <div class="container " id="main-container">
   <div class="row align-items-center">
-    <div class="col">
+
+    <div id="profile-data">
       <header class="jumbotron">
-        <h3>
-          <strong>{{ searchedUserData?.username }}</strong> Profile
+        <h3 id="profile-name">
+          <strong>{{ searchedUser?.username }}</strong> profile
         </h3>
+        <button *ngIf="isCurrentUserFollowingSearchedUser && searchedUser?.id != currentUser?.id" (click)="onFollow()"
+                type="button" class="btn btn-outline-primary profile-control-button">Unfollow
+        </button>
+
+        <button *ngIf="!isCurrentUserFollowingSearchedUser && searchedUser?.id != currentUser?.id" (click)="onFollow()"
+                type="button" class="btn btn-outline-primary profile-control-button">Follow
+        </button>
+
+        <button *ngIf="currentUser?.role == 'ADMIN' && searchedUser?.id != currentUser?.id"
+                type="button" class="btn btn-outline-danger profile-control-button"
+                data-bs-toggle="modal" data-bs-target="#deleteAccountModal"> Delete Account
+        </button>
+
+        <button *ngIf="currentUser?.role == 'ADMIN' && searchedUser?.id != currentUser?.id"
+                type="button" class="btn btn-outline-danger profile-control-button"
+                data-bs-toggle="modal" data-bs-target="#changeRoleModal"> Change role
+        </button>
+        <br>
       </header>
+    </div>
+
+    <div class="col">
 
       <p>
         <strong>Name:</strong>
-        {{ searchedUserData?.name }}
+        {{ searchedUser?.name }}
       </p>
-      <div *ngIf="searchedUserId != currentUser.id">
-        <button type="button" class="btn btn-outline-primary" (click)="onFollow()"
-                *ngIf="isCurrentUserFollowingSearchedUser">Unfollow
-        </button>
-        <button type="button" class="btn btn-outline-primary" (click)="onFollow()"
-                *ngIf="!isCurrentUserFollowingSearchedUser">Follow
-        </button>
-      </div>
 
       <div *ngIf="profilePhoto?.picByte != null">
         <img [src]="profilePhoto?.picByte" class="rounded-circle" alt="profile photo">
       </div>
+
       <div *ngIf="profilePhoto?.picByte == null">
         <img src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
              class="profile-img-card"
              alt="empty avatar image"/>
       </div>
 
-      <button *ngIf="currentUser.role == 'ADMIN' && searchedUserId != currentUser.id" type="button"
-              class="btn btn-outline-danger" data-bs-toggle="modal"
-              data-bs-target="#deleteAccountModal" >Delete Account
-      </button>
-
-      <button *ngIf="currentUser.role == 'ADMIN' && searchedUserId != currentUser.id" type="button"
-              class="btn btn-outline-danger" data-bs-toggle="modal"
-              data-bs-target="#changeRoleModal">Change role
-      </button>
-
-      <!-- Delete User Modal -->
-      <div class="modal fade" id="deleteAccountModal">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-
-            <div class="modal-header">
-              <h5 class="modal-title">Do you want to delete Account?</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-
-            <div class="modal-footer">
-              <button (click)="onDeleteAccount()" type="button" class="btn btn-outline-danger"
-                      data-bs-dismiss="modal" routerLink="board-admin">Confirm
-              </button>
-              <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Cancel</button>
-            </div>
-
-          </div>
-        </div>
-      </div>
 
       <!-- Confirm changing user role to moderator -->
       <div class="modal fade" id="changeRoleModal">
@@ -83,12 +68,7 @@
           </div>
         </div>
       </div>
-
-
-
-
       <br>
-
     </div>
 
     <div class="col">
@@ -115,21 +95,21 @@
     <div class="container">
 
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-        <div *ngFor="let picture of allImagesResponse">
+        <div *ngFor="let image of allImagesResponse">
           <div class="col">
-            <div class="card shadow-sm">
-              <img [src]="picture.picByte" class="img-fluid" alt="one of pictures on someones profile">
-
+            <div class="card shadow-sm ">
+              <div class="img-hover-zoom">
+                <img [src]="image?.picByte" class="img-fluid" alt="photo on your profile">
+              </div>
               <div class="card-body">
-                <p class="card-text">{{ picture.description }}</p>
-
+                <p class="card-text">{{ image.description }}</p>
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="btn-group">
-                    <button (click)="onOpenViewImage(picture.id)" type="button" class="btn btn-sm btn-outline-secondary"
-                            data-bs-toggle="modal" data-bs-target="#imageModal">View
+                    <button type="button" class="btn btn-sm btn-outline-secondary"
+                            data-bs-toggle="modal" data-bs-target="#imageModal" (click)="onOpenImageModal(image)">View
                     </button>
-
-                    <button (click)="onDeleteImage(picture)" type="button"
+                    <button type="button" data-bs-toggle="modal"
+                            data-bs-target="#deleteImageModal" (click)="onOpenDeleteModal(image)"
                             class="btn btn-sm btn-outline-secondary">Delete
                     </button>
                   </div>
@@ -141,83 +121,137 @@
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Image Modal -->
-  <div class="modal fade" id="imageModal">
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content">
+<!-- Image Modal -->
+<div class="modal fade" id="imageModal">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
 
-        <div class="modal-body">
-          <img [src]="selectedImage" class="img-fluid" alt="Picture you just selected to preview">
+      <div class="modal-body">
+        <img [src]="selectedImage?.picByte" class="img-fluid" alt="Picture you just selected to preview">
+        <p class="card-text" style="margin-top: 1rem; font-size: 1.4rem;">{{ selectedImage?.description }} </p>
+        <button *ngIf="selectedImage?.isLiked" (click)="deleteLike()" class="btn"><i
+          class="bi bi-heart-fill"></i></button>
+        <button *ngIf="selectedImage?.isLiked == false" (click)="likeImage()" class="btn"><i
+          class="bi bi-heart"></i></button>
+        {{ selectedImage?.likesCount }}
+        <button class="btn" (click)="commentsButtonClick()"><i class="bi bi-chat"></i></button>
+        {{ selectedImage?.commentsCount }}
+        <button class="btn"><i class="bi bi-share"></i></button>
+
+
+        <div *ngFor="let comment of comments">
+          <div *ngIf="selectedImage?.id == comment?.imageId && areCommentsCollapsed == false" class="commentBody">
+            <h5 id="commentUserName" (click)="onViewUserProfile(comment.ownerId)" routerLink="view-profile"
+                data-bs-dismiss="modal">{{
+              comment.authorName }}:</h5>
+            <p id="commentDescription"> {{ comment.description }} </p>
+
+            <button
+              *ngIf="currentUser.id == comment.ownerId || currentUser.role == 'ADMIN' || currentUser.role == 'MODERATOR'"
+              class="btn"
+              (click)="deleteComment(comment, selectedImage)"><i class="bi bi-x-lg" id="deleteCommentIcon"></i>
+            </button>
+          </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <div style="text-align: center;">
+          <button (click)="getCommentsPaged()" *ngIf="areThereMoreComments == true && areCommentsCollapsed == false"
+                  style="justify-content: center;" type="button" class="btn btn-outline-primary">Load more comments
+          </button>
+        </div>
+        <div class="input-group mb-3" id="commentInputBar">
+          <button (click)="addComment(description)" class="btn btn-outline-secondary"
+                  type="button" id="button-addComment">Add Comment!
+          </button>
+          <input [(ngModel)]="description" type="text" class="form-control" placeholder="">
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- FOLLOWERS MODAL -->
-  <div class="modal fade" id="followersModal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
+<!-- Delete User Modal -->
+<div class="modal fade" id="deleteAccountModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
 
-        <div class="modal-header">
-          <h5 class="modal-title">Followers</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
+      <div class="modal-header">
+        <h5 class="modal-title">Do you want to delete Account?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
 
-        <div class="modal-body">
+      <div class="modal-footer">
+        <button (click)="onDeleteAccount()" type="button" class="btn btn-outline-danger"
+                data-bs-dismiss="modal" routerLink="board-admin">Confirm
+        </button>
+        <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Cancel</button>
+      </div>
 
-          <table class="table">
-            <thead class="thead-dark">
-            <tr>
-              <th scope="col">User name</th>
-              <th scope="col">Name</th>
+    </div>
+  </div>
+</div>
 
-            </tr>
-            </thead>
-            <tbody *ngFor="let follower of followersList">
-            <tr>
-              <td>{{ follower?.username }}</td>
-              <td>{{ follower?.name }}</td>
+<!-- FOLLOWERS MODAL -->
+<div class="modal fade" id="followersModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
 
-            </tr>
-            </tbody>
-          </table>
-        </div>
+      <div class="modal-header">
+        <h5 class="modal-title">Followers</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <table class="table">
+          <thead class="thead-dark">
+          <tr>
+            <th scope="col">User name</th>
+            <th scope="col">Name</th>
+
+          </tr>
+          </thead>
+          <tbody *ngFor="let follower of followersList">
+          <tr>
+            <td>{{ follower?.username }}</td>
+            <td>{{ follower?.name }}</td>
+
+          </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- FOLLOWING MODAL -->
-  <div class="modal fade" id="followingModal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
+<!-- FOLLOWING MODAL -->
+<div class="modal fade" id="followingModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
 
-        <div class="modal-header">
-          <h5 class="modal-title">Following</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
+      <div class="modal-header">
+        <h5 class="modal-title">Following</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
 
-        <div class="modal-body">
+      <div class="modal-body">
 
-          <table class="table">
-            <thead class="thead-dark">
-            <tr>
-              <th scope="col">User name</th>
-              <th scope="col">Name</th>
+        <table class="table">
+          <thead class="thead-dark">
+          <tr>
+            <th scope="col">User name</th>
+            <th scope="col">Name</th>
 
-            </tr>
-            </thead>
-            <tbody *ngFor="let following of followingList">
-            <tr>
-              <td>{{ following?.username }}</td>
-              <td>{{ following?.name }}</td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
+          </tr>
+          </thead>
+          <tbody *ngFor="let following of followingList">
+          <tr>
+            <td>{{ following?.username }}</td>
+            <td>{{ following?.name }}</td>
+          </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

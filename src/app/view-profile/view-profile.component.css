@@ -1,0 +1,48 @@
+.img-hover-zoom {
+  height: 230px;
+  overflow: hidden;
+}
+
+.img-hover-zoom img {
+  transition: transform .5s ease;
+}
+
+.img-hover-zoom:hover img {
+  transform: scale(1.2);
+}
+
+#follow-button, #profile-name {
+  display: inline;
+}
+
+#follow-button {
+  float: right;
+}
+
+.profile-control-button {
+  margin-left: 0.5rem;
+}
+
+#profile-data {
+  margin-top: 0.5rem;
+  margin-bottom: 0.2rem;
+}
+
+#commentDescription, #commentUserName {
+  display: inline;
+}
+
+#commentInputBar {
+  margin-top: 10px;
+}
+
+#deleteCommentIcon {
+  position: absolute;
+  right: 10px;
+  top: 0;
+}
+
+.commentBody {
+  position: relative;
+}
+

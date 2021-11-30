@@ -36,6 +36,7 @@ export class ProfileComponent implements OnInit {
   selectedImage: ImageModel;
   selectedDeleteImage: ImageModel;
 
+  // -------------- UPLOADING IMAGES --------------
   acceptableFileTypes = ['image/jpeg', 'image.png'];
   isImageValid = false;
   maxImageSize = 5242880; // 5MB
